@@ -1,4 +1,4 @@
-<img align="right" src=ResistorEnDecoder/icons/resistor_decoder.png width=120px>
+<img align="right" src=icons/resistor_decoder.png width=120px>
 
 # Resistor​Decoder
 
