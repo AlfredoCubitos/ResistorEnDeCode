@@ -36,7 +36,7 @@ pip install PySide6
 
 ```
 git clone https://github.com/AlfredoCubitos/ResistorEnDeCode
-cd ResistorDecoder
+cd ResistorEnDecode
 python main.py
 ```
 
