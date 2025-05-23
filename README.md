@@ -1,6 +1,6 @@
 <img align="right" src=icons/resistor_decoder.png width=120px>
 
-# Resistor​Decoder
+# ResistorEn​Decode
 
 This is a code copy (not a fork) from https://github.com/VoxelCubes/ResistorDecoder.  
 Its a copy because, there are some infrastructure changes made which may not be very compatible with the original code base.
