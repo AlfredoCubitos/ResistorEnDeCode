@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'resistance_calcelNUrj.ui'
+## Form generated from reading UI file 'resistance_calcIfVbIc.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.9.0
 ##
@@ -318,7 +318,6 @@ class Ui_MainWindow(object):
 
         self.lineEdit_resistance_max_5b = QLineEdit(self.tab_5b)
         self.lineEdit_resistance_max_5b.setObjectName(u"lineEdit_resistance_max_5b")
-        self.lineEdit_resistance_max_5b.setStyleSheet(u"background-color: rgb(234, 234, 234);")
         self.lineEdit_resistance_max_5b.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lineEdit_resistance_max_5b.setReadOnly(True)
 
@@ -326,7 +325,6 @@ class Ui_MainWindow(object):
 
         self.lineEdit_resistance_min_5b = QLineEdit(self.tab_5b)
         self.lineEdit_resistance_min_5b.setObjectName(u"lineEdit_resistance_min_5b")
-        self.lineEdit_resistance_min_5b.setStyleSheet(u"background-color: rgb(234, 234, 234);")
         self.lineEdit_resistance_min_5b.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lineEdit_resistance_min_5b.setReadOnly(True)
 
@@ -334,7 +332,6 @@ class Ui_MainWindow(object):
 
         self.lineEdit_resistance_5b = QLineEdit(self.tab_5b)
         self.lineEdit_resistance_5b.setObjectName(u"lineEdit_resistance_5b")
-        self.lineEdit_resistance_5b.setStyleSheet(u"background-color: rgb(234, 234, 234);")
         self.lineEdit_resistance_5b.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lineEdit_resistance_5b.setReadOnly(True)
 
@@ -813,7 +810,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(4)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -876,12 +873,12 @@ class Ui_MainWindow(object):
         self.label_15.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>This is a standalone tool to decode the color bands on through-hole resistors and number codes on SMD parts. It supports 3, 4, 5, and 6 band resistors, as well as standard SMD codes, including the EIA-96 standard.</p></body></html>", None))
         self.label_29.setText(QCoreApplication.translate("MainWindow", u"Libraries: ", None))
         self.label_30.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Qt 6.1.2 using PySide6</p></body></html>", None))
-        self.label_31.setText(QCoreApplication.translate("MainWindow", u"Python 3.9.5", None))
+        self.label_31.setText(QCoreApplication.translate("MainWindow", u"Python >=3.9.5", None))
         self.label_38.setText("")
         self.label_34.setText(QCoreApplication.translate("MainWindow", u"Author:", None))
         self.label_39.setText(QCoreApplication.translate("MainWindow", u"Voxel, AC", None))
         self.label_33.setText(QCoreApplication.translate("MainWindow", u"Source:", None))
-        self.label_40.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><a href=\"https://github.com/VoxelCubes/ResistorDecoder\"><span style=\" text-decoration: underline; color:#5294e2;\">github.com/VoxelCubes/ResistorDecoder</span></a></p></body></html>", None))
+        self.label_40.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><a href=\"https://github.com/AlfredoCubitos/ResistorEnDeCode\"><span style=\" text-decoration: underline; color:#2980b9;\">https://github.com/AlfredoCubitos/ResistorEnDeCode</span></a></p></body></html>", None))
         self.pushButton_license.setText(QCoreApplication.translate("MainWindow", u"License: GNU General Public License Version 3 and later", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.about), QCoreApplication.translate("MainWindow", u"About", None))
     # retranslateUi
