@@ -150,6 +150,22 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         self.calculate_res_5b()
         self.calculate_res_6b()
         self.calculate_res_smd()
+        self.setETable()
+
+    def setETable(self):
+        for i, v in enumerate(gh.E96):
+            itm = Qw.QTableWidgetItem(str(v))
+            itm.setTextAlignment(Qc.Qt.AlignHCenter)
+            self.tableWidget.insertRow(i)
+            self.tableWidget.setItem(i, 2, itm)
+        for i, v in enumerate(gh.E48):
+            itm = Qw.QTableWidgetItem(str(v))
+            itm.setTextAlignment(Qc.Qt.AlignHCenter)
+            self.tableWidget.setItem(i, 1, itm)
+        for i, v in enumerate(gh.E24):
+            itm = Qw.QTableWidgetItem(str(v))
+            itm.setTextAlignment(Qc.Qt.AlignHCenter)
+            self.tableWidget.setItem(i, 0, itm)
 
     def set_edit_state4b(self):
         if not self.checkBox.isChecked():
