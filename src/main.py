@@ -1,22 +1,10 @@
-##!/bin/python
+##!/bin/python3
 import os
-
-"""
-python -m nuitka --help
-# Windows:
-python -m nuitka --onefile --plugin-enable=pyside6 -o "ResistorDecoder.exe" --windows-disable-console --windows-icon-from-ico=icons\resistor_decoder.png --output-dir=nuitka_build src\main.py
-# Linux AppImage:
-python -m nuitka --onefile --plugin-enable=pyside6 -o "ResistorDecoder-1.0.appimage" --windows-disable-console --linux-onefile-icon=icons/resistor_decoder.png --output-dir=nuitka_build src/main.py
-"""
-
-# QT plugins are copied from the site-packages folder into .\qtplugins\ for the pyinstaller build.
-os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = "."  #"qtplugins"
 
 import sys
 import PySide6.QtWidgets as Qw
 import PySide6.QtCore as Qc
 from driver_resistance_calc import ResistanceCalc
-
 
 
 def main():

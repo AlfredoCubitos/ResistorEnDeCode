@@ -21,7 +21,7 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
             ":/general/resistor_icon.svg", Qc.QSize(), Qg.QIcon.Normal, Qg.QIcon.Off
         )
         self.setWindowIcon(icon)
-        self.setWindowTitle("Resistor Decoder")
+        self.setWindowTitle("Resistor En or Decode")
 
         # For the license window
         self.license_window = None
@@ -232,18 +232,15 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
             r = value
 
         mul = gh.get_multiplier(r)
-        print(value, " :: ", r[0], " - ", r[1], " ", mul["idx"])
+        # print(value, " :: ", r[0], " - ", r[1], " ", mul["idx"])
 
-        if r[1] == ".":
-            snd = r[2]
-            tnd = r[3]
-        else:
-            snd = r[1]
-            tnd = r[2]
+        # since we need only the digits we can remove the '.'
+        r = r.replace(".", "")
+        print("R ", r)
 
         self.comboBox_1d_5b.setCurrentIndex(int(r[0]) - 1)
-        self.comboBox_2d_5b.setCurrentIndex(int(snd))
-        self.comboBox_3d_5b.setCurrentIndex(int(tnd))
+        self.comboBox_2d_5b.setCurrentIndex(int(r[1]))
+        self.comboBox_3d_5b.setCurrentIndex(int(r[2]))
         self.comboBox_m_5b.setCurrentIndex(int(mul["idx"]))
 
     def change_band_colors_4b(self):

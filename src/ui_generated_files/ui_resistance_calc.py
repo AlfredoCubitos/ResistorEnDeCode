@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'resistance_calcYDqKLO.ui'
+## Form generated from reading UI file 'resistance_calccKFwyu.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.9.0
 ##
@@ -319,6 +319,7 @@ class Ui_MainWindow(object):
 
         self.lineEdit_resistance_max_5b = QLineEdit(self.tab_5b)
         self.lineEdit_resistance_max_5b.setObjectName(u"lineEdit_resistance_max_5b")
+        self.lineEdit_resistance_max_5b.setStyleSheet(u"background-color: rgb(234, 234, 234);")
         self.lineEdit_resistance_max_5b.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lineEdit_resistance_max_5b.setReadOnly(True)
 
@@ -326,6 +327,7 @@ class Ui_MainWindow(object):
 
         self.lineEdit_resistance_min_5b = QLineEdit(self.tab_5b)
         self.lineEdit_resistance_min_5b.setObjectName(u"lineEdit_resistance_min_5b")
+        self.lineEdit_resistance_min_5b.setStyleSheet(u"background-color: rgb(234, 234, 234);")
         self.lineEdit_resistance_min_5b.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lineEdit_resistance_min_5b.setReadOnly(True)
 
@@ -333,6 +335,7 @@ class Ui_MainWindow(object):
 
         self.lineEdit_resistance_5b = QLineEdit(self.tab_5b)
         self.lineEdit_resistance_5b.setObjectName(u"lineEdit_resistance_5b")
+        self.lineEdit_resistance_5b.setStyleSheet(u"background-color: rgb(234, 234, 234);")
         self.lineEdit_resistance_5b.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lineEdit_resistance_5b.setReadOnly(True)
 
@@ -830,7 +833,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(4)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
