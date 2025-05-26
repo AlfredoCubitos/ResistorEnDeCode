@@ -199,7 +199,7 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         if value.endswith(("k", "K")):
             r = value.rstrip("kK")
             r = f"{float(r) * 1000:g}"
-        elif value.endswith(("m", "M")):
+        elif value.endswith(("M")):
             r = value.rstrip("mM")
             r = f"{float(r) * 1000000:g}"
         else:
