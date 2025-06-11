@@ -305,63 +305,29 @@ E96 = [
 CAPACITY = [("pF", 1), ("nF", 1000), ("µF", 1000000), ("mF", 1000000000)]
 
 
-def format_metric(
-    value, precision=3, decimal=True, valid_prefixes=(9, 6, 3, 0, -3, -6, -9)
-):
-    import math
-
-    try:
-        if decimal:
-            exponent = math.floor(math.log10(value))
-        else:
-            exponent = math.floor(math.log2(value))
-    except ValueError:
-        # log of 0 is -inf
-        return "0 "
-
-    # Find first prefix exponent smaller than the given exponent, in descending order.
-    # Use the last good enough value if nothing was found.
-    best_prefix = 0
-    for prefix in sorted(valid_prefixes, reverse=True):
-        best_prefix = prefix
-        if prefix <= exponent:
-            break
-
-    if decimal:
-        value /= 10**best_prefix
-    else:
-        value /= 2**best_prefix
-
-    # Rounds the value and places a reasonable metric prefix
-    format_str = "{:." + str(precision) + "}"
-    value = float(format_str.format(float(value)))
-    prefix = SI_units[str(int(best_prefix))][1]
-    # Round off trailing decimal when possible
-    if value == math.floor(value):
-        value = int(value)
-    # return f"{value} {prefix}"
-    return (value, prefix)
-
-
-def format_resistance(_value, _precision):
-    # Allow the Giga, Mega, kilo, none, milli prefixes
-    value_str, prefix = format_metric(_value, _precision, True, (9, 6, 3, 0, -3))
-    return f"{value_str}Ω"
-
-
-def edit_format_resistance(_value, _precision):
-    # Allow the Giga, Mega, kilo, none, milli prefixes
-    value_str, prefix = format_metric(_value, _precision, True, (9, 6, 3, 0, -3))
-    # return f"{value_str}Ω"
-    return value_str, prefix + "Ω"
-
-
 def calculate_values(_tolerance, _mantissa, _multiplier):
     tolerance_val = int(_tolerance) * 0.01
-    actual_value = _mantissa * 10**_multiplier
-    min_value = actual_value * (1 - tolerance_val)
-    max_value = actual_value * (1 + tolerance_val)
-    return actual_value, min_value, max_value
+    ohm = _mantissa * 10**_multiplier
+
+    if ohm < 1:
+        postfix = "mΩ"
+        actual_value = ohm
+    elif ohm > 999 and ohm < 999999:
+        postfix = "kΩ"
+        actual_value = ohm / 1000
+    elif ohm > 999999:
+        postfix = "MΩ"
+        actual_value = ohm / 100000
+    else:
+        postfix = "Ω"
+        actual_value = ohm
+        if actual_value > 999:
+            actual_value = actual_value / 1000
+
+    min_value = format(actual_value * (1 - tolerance_val), ".1f")
+    max_value = format(actual_value * (1 + tolerance_val), ".1f")
+
+    return actual_value, min_value, max_value, postfix
 
 
 def get_multiplier(value):

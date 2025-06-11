@@ -78,7 +78,7 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         self.comboBox_m_4b.currentIndexChanged.connect(self.calculate_res_4b)
         self.comboBox_t_4b.currentIndexChanged.connect(self.calculate_res_4b)
         # self.lineEdit_resistance_4b.editingFinished.connect(self.calculate_4b)
-        # self.checkBox.checkStateChanged.connect(self.set_edit_state4b)
+        
         self.lineEdit_ohm_4d.cursorPositionChanged.connect(self.validateLineEdit4b)
 
         self.comboBox_1d_5b.currentIndexChanged.connect(self.calculate_res_5b)
@@ -108,11 +108,6 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         self.csmd_digit4.currentIndexChanged.connect(self.setCapacityValue)
         self.rB_csmd.checkStateChanged.connect(self.setCapacityValue)
         self.cmb_csmb_cap.currentIndexChanged.connect(self.calculateCapacity)
-
-        file = Qc.QFile(":general/resistor_smd.svg")
-        if not file.open(Qc.QIODevice.ReadOnly):
-            print("Error: Unable to read resistor_smd.svg")
-        self.svg_data_smd = file.readAll()
 
         file = Qc.QFile(":general/capacitor_smd.svg")
         if not file.open(Qc.QIODevice.ReadOnly):
@@ -221,17 +216,7 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         for v in gh.CAPACITY:
             self.cmb_csmb_cap.addItem(v[0])
 
-    def set_edit_state4b(self):
-        if not self.checkBox.isChecked():
-            self.lineEdit_resistance_4b.setReadOnly(True)
-            self.lineEdit_resistance_4b.setStyleSheet(
-                "QLineEdit {background-color: rgb(234, 234, 234);}"
-            )
-        if self.checkBox.isChecked():
-            self.lineEdit_resistance_4b.setReadOnly(False)
-            self.lineEdit_resistance_4b.setStyleSheet(
-                "QLineEdit {background-color: rgb(255, 255, 255);}"
-            )
+    
 
     def set_edit_state5b(self):
         if not self.checkBox_5b.isChecked():
@@ -387,6 +372,11 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         line_under_long = self.radioButton_line_under_long.isChecked()
         line_top = self.radioButton_line_top.isChecked()
 
+        file = Qc.QFile(":general/resistor_smd.svg")
+        if not file.open(Qc.QIODevice.ReadOnly):
+            print("Error: Unable to read resistor_smd.svg")
+        svg_data = file.readAll()
+
         def color_assignment(show):
             if show:
                 return b"#FFFFFF"
@@ -401,14 +391,14 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
                 return b"stroke-opacity:0"
 
         # Hot patch SVG file by replacing these placeholder colors.
-        current_data = (
-            self.svg_data_smd.replace(b"#996601", color_assignment(line_under_short))
-            .replace(b"#996602", color_assignment(line_under_long))
-            .replace(b"#996603", color_assignment(line_top))
-            .replace(b"stroke-opacity:0.28", opacity_assignment(line_under_long))
+        svg_data.replace(b"#996601", color_assignment(line_under_short)).replace(
+            b"#996602", color_assignment(line_under_long)
+        ).replace(b"#996603", color_assignment(line_top)).replace(
+            b"stroke-opacity:0.28", opacity_assignment(line_under_long)
         )
+
         # Update SVG
-        self.svg_widget_smd.load(Qc.QByteArray(current_data))
+        self.svg_widget_smd.load(svg_data)
         # change_band_colors_smd
 
     def calculate_res_4b(self):
@@ -416,18 +406,28 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         digit1 = self.comboBox_1d_4b.currentText()
         digit2 = self.comboBox_2d_4b.currentText()
         divisor = self.comboBox_m_4b.currentIndex()
+
         tolid = self.comboBox_t_4b.currentIndex()
         tolerance = self.json["tolerance"][tolid]["value"]
         mantissa = int(digit1 + digit2)
-        print(tolerance)
-        value, min_value, max_value = gh.calculate_values(tolerance, mantissa, divisor)
+        print("Tol: ", tolerance)
+        value, min_value, max_value, post_fix = gh.calculate_values(
+            tolerance, mantissa, divisor
+        )
 
-        r, attr = gh.edit_format_resistance(value, 3)
+        # r, attr = gh.edit_format_resistance(value, 3)
 
-        self.lineEdit_resistance_4b.setText(f"{r}")
-        self.label_resistance_4b.setText(f"{attr}")
-        self.lineEdit_resistance_min_4b.setText(gh.format_resistance(min_value, 5))
-        self.lineEdit_resistance_max_4b.setText(gh.format_resistance(max_value, 5))
+        self.lineEdit_resistance_4b.setText(f"{value}")
+        self.label_resistance_4b.setText(f"{post_fix}")
+        self.lineEdit_resistance_min_4b.setText(str(min_value))
+        self.lineEdit_resistance_max_4b.setText(str(max_value))
+        self.lineEdit_ohm_4d.setText(f"{value}")
+
+        # o = f"{attr}".strip()
+        # print("O: ", o, " ", self.comboBox_ohm_4d.findText(o, Qc.Qt.MatchFixedString))
+        self.comboBox_ohm_4d.setCurrentIndex(
+            self.comboBox_ohm_4d.findText(post_fix, Qc.Qt.MatchFixedString)
+        )
 
         return value, min_value, max_value
         # calculate_res_4b
@@ -458,12 +458,14 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         tolerance = self.json["tolerance"][tolid]["value"]
         mantissa = int(digit1 + digit2 + digit3)
 
-        value, min_value, max_value = gh.calculate_values(tolerance, mantissa, divisor)
-        r, attr = gh.edit_format_resistance(value, 3)
-        self.lineEdit_resistance_5b.setText(f"{r}")
-        self.label_resistance_5b.setText(f"{attr} ±{tolerance}")
-        self.lineEdit_resistance_min_5b.setText(gh.format_resistance(min_value, 5))
-        self.lineEdit_resistance_max_5b.setText(gh.format_resistance(max_value, 5))
+        value, min_value, max_value, post_fix = gh.calculate_values(
+            tolerance, mantissa, divisor
+        )
+        # r, attr = gh.edit_format_resistance(value, 3)
+        self.lineEdit_resistance_5b.setText(f"{value}")
+        self.label_resistance_5b.setText(f"{post_fix} ±{tolerance}")
+        self.lineEdit_resistance_min_5b.setText(str(min_value))
+        self.lineEdit_resistance_max_5b.setText(str(max_value))
 
         return value, min_value, max_value
         # calculate_res_5b
@@ -480,13 +482,13 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
 
         mantissa = int(digit1 + digit2 + digit3)
 
-        value, min_value, max_value = gh.calculate_values(tolerance, mantissa, divisor)
-
-        self.lineEdit_resistance_6b.setText(
-            f"{gh.format_resistance(value, 3)} ±{tolerance}"
+        value, min_value, max_value, post_fix = gh.calculate_values(
+            tolerance, mantissa, divisor
         )
-        self.lineEdit_resistance_min_6b.setText(gh.format_resistance(min_value, 5))
-        self.lineEdit_resistance_max_6b.setText(gh.format_resistance(max_value, 5))
+
+        self.lineEdit_resistance_6b.setText(f"{value} ±{tolerance}")
+        self.lineEdit_resistance_min_6b.setText(str(min_value))
+        self.lineEdit_resistance_max_6b.setText(str(max_value))
         self.lineEdit_tcr_6b.setText(str(tcr) + " ppm/°C")
 
         return value, min_value, max_value, tcr
@@ -508,11 +510,9 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
             min_value = value * (1 - 0.01 * tolerance)
             max_value = value * (1 + 0.01 * tolerance)
 
-            self.lineEdit_resistance_smd.setText(
-                f"{gh.format_resistance(value, 3)} ±{tolerance}%"
-            )
-            self.lineEdit_resistance_min_smd.setText(gh.format_resistance(min_value, 5))
-            self.lineEdit_resistance_max_smd.setText(gh.format_resistance(max_value, 5))
+            self.lineEdit_resistance_smd.setText(f"{value:.1f} ±{tolerance}%")
+            self.lineEdit_resistance_min_smd.setText(f"{min_value:.1f}")
+            self.lineEdit_resistance_max_smd.setText(f"{max_value:.1f}")
 
             # Hide notice if standardized
             self.label_tolerance_notice.setHidden(is_standard_tolerance)
@@ -567,6 +567,7 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         self.attachComboRs(6, self.comboBox_tcr_6b, "trc")
 
         self.comboBox_ohm_4d.addItems(["mΩ", "Ω", "kΩ", "MΩ"])
+        self.comboBox_ohm_4d.setItemData(1, "Ω")
         self.comboBox_ohm_4d.setCurrentIndex(1)
 
         self.comboBox_t_4b.setCurrentIndex(2)

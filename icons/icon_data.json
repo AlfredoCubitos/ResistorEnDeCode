@@ -101,7 +101,7 @@
             "color": "green",
             "idx": "5",
             "icon": ":/colors/Color Squares/green.png",
-            "exponent": 6,
+            "exponent": 5,
             "text": "100 kΩ"
         },
         {
