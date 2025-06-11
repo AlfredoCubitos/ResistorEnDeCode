@@ -59,6 +59,100 @@ E24 = [
     8.2,
     9.1,
 ]
+LE24 = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+]
+EIA198 = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "J",
+    "K",
+    "a",
+    "L",
+    "M",
+    "N",
+    "b",
+    "p",
+    "d",
+    "R",
+    "e",
+    "S",
+    "f",
+    "T",
+    "U",
+    "m",
+    "V",
+    "W",
+    "n",
+    "X",
+    "t",
+    "Y",
+    "y",
+    "z",
+]
+EIA198v = [
+    1,
+    1.1,
+    1.2,
+    1.3,
+    1.5,
+    1.6,
+    1.8,
+    2,
+    2.2,
+    2.4,
+    2.6,
+    3,
+    3.3,
+    3.5,
+    3.6,
+    3.9,
+    4,
+    4.3,
+    4.5,
+    4.7,
+    5,
+    5.1,
+    5.6,
+    6,
+    6.2,
+    6.8,
+    7,
+    7.5,
+    8,
+    8.2,
+    9,
+    9.1,
+]
 E48 = [
     1,
     1.05,
@@ -208,6 +302,8 @@ E96 = [
     9.76,
 ]
 
+CAPACITY = [("pF", 1), ("nF", 1000), ("µF", 1000000), ("mF", 1000000000)]
+
 
 def format_metric(
     value, precision=3, decimal=True, valid_prefixes=(9, 6, 3, 0, -3, -6, -9)
@@ -261,7 +357,7 @@ def edit_format_resistance(_value, _precision):
 
 
 def calculate_values(_tolerance, _mantissa, _multiplier):
-    tolerance_val = float(re.match(r"\d+\.?\d*", _tolerance).group(0)) * 0.01
+    tolerance_val = int(_tolerance) * 0.01
     actual_value = _mantissa * 10**_multiplier
     min_value = actual_value * (1 - tolerance_val)
     max_value = actual_value * (1 + tolerance_val)
@@ -269,7 +365,13 @@ def calculate_values(_tolerance, _mantissa, _multiplier):
 
 
 def get_multiplier(value):
-    if len(value) <= 2:
+    if len(value) > 0 and len(value) <= 1:
+        return {
+            "multipler": "0.1",
+            "color": "gold",
+            "idx": "2",
+        }
+    elif len(value) > 1 and len(value) <= 2:
         return {
             "multipler": "1",
             "color": "black",

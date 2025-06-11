@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'resistance_calccKFwyu.ui'
+## Form generated from reading UI file 'mainwindowbDWIRM.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.9.0
+## Created by: Qt User Interface Compiler version 6.9.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -15,10 +15,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFormLayout,
-    QGridLayout, QHBoxLayout, QHeaderView, QLabel,
-    QLineEdit, QMainWindow, QPushButton, QRadioButton,
-    QSizePolicy, QSpacerItem, QTabWidget, QTableWidget,
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QCheckBox, QComboBox,
+    QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
+    QHeaderView, QLabel, QLayout, QLineEdit,
+    QMainWindow, QPushButton, QRadioButton, QSizePolicy,
+    QSpacerItem, QSpinBox, QTabWidget, QTableWidget,
     QTableWidgetItem, QVBoxLayout, QWidget)
 import resource_base_rc
 
@@ -26,7 +27,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(642, 420)
+        MainWindow.resize(642, 417)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout_5 = QHBoxLayout(self.centralwidget)
@@ -64,63 +65,68 @@ class Ui_MainWindow(object):
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.gridLayout_2.setHorizontalSpacing(10)
         self.gridLayout_2.setVerticalSpacing(3)
-        self.comboBox_m_4b = QComboBox(self.tab_4b)
-        self.comboBox_m_4b.setObjectName(u"comboBox_m_4b")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.comboBox_m_4b.sizePolicy().hasHeightForWidth())
-        self.comboBox_m_4b.setSizePolicy(sizePolicy1)
+        self.label_12 = QLabel(self.tab_4b)
+        self.label_12.setObjectName(u"label_12")
 
-        self.gridLayout_2.addWidget(self.comboBox_m_4b, 1, 2, 1, 1)
+        self.gridLayout_2.addWidget(self.label_12, 0, 3, 1, 1)
+
+        self.horizontalSpacer = QSpacerItem(112, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_2.addItem(self.horizontalSpacer, 1, 5, 1, 1)
 
         self.label_4 = QLabel(self.tab_4b)
         self.label_4.setObjectName(u"label_4")
         self.label_4.setTextFormat(Qt.TextFormat.RichText)
 
-        self.gridLayout_2.addWidget(self.label_4, 0, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.label_4, 0, 2, 1, 1)
 
-        self.label_5 = QLabel(self.tab_4b)
-        self.label_5.setObjectName(u"label_5")
+        self.label_3 = QLabel(self.tab_4b)
+        self.label_3.setObjectName(u"label_3")
+        self.label_3.setTextFormat(Qt.TextFormat.RichText)
 
-        self.gridLayout_2.addWidget(self.label_5, 0, 3, 1, 1)
+        self.gridLayout_2.addWidget(self.label_3, 0, 1, 1, 1)
 
-        self.label_12 = QLabel(self.tab_4b)
-        self.label_12.setObjectName(u"label_12")
+        self.comboBox_1d_4b = QComboBox(self.tab_4b)
+        self.comboBox_1d_4b.setObjectName(u"comboBox_1d_4b")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.comboBox_1d_4b.sizePolicy().hasHeightForWidth())
+        self.comboBox_1d_4b.setSizePolicy(sizePolicy1)
 
-        self.gridLayout_2.addWidget(self.label_12, 0, 2, 1, 1)
-
-        self.comboBox_2d_4b = QComboBox(self.tab_4b)
-        self.comboBox_2d_4b.setObjectName(u"comboBox_2d_4b")
-        sizePolicy1.setHeightForWidth(self.comboBox_2d_4b.sizePolicy().hasHeightForWidth())
-        self.comboBox_2d_4b.setSizePolicy(sizePolicy1)
-
-        self.gridLayout_2.addWidget(self.comboBox_2d_4b, 1, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.comboBox_1d_4b, 1, 1, 1, 1)
 
         self.comboBox_t_4b = QComboBox(self.tab_4b)
         self.comboBox_t_4b.setObjectName(u"comboBox_t_4b")
         sizePolicy1.setHeightForWidth(self.comboBox_t_4b.sizePolicy().hasHeightForWidth())
         self.comboBox_t_4b.setSizePolicy(sizePolicy1)
 
-        self.gridLayout_2.addWidget(self.comboBox_t_4b, 1, 3, 1, 1)
+        self.gridLayout_2.addWidget(self.comboBox_t_4b, 1, 4, 1, 1)
 
-        self.label_3 = QLabel(self.tab_4b)
-        self.label_3.setObjectName(u"label_3")
-        self.label_3.setTextFormat(Qt.TextFormat.RichText)
+        self.label_5 = QLabel(self.tab_4b)
+        self.label_5.setObjectName(u"label_5")
 
-        self.gridLayout_2.addWidget(self.label_3, 0, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.label_5, 0, 4, 1, 1)
 
-        self.comboBox_1d_4b = QComboBox(self.tab_4b)
-        self.comboBox_1d_4b.setObjectName(u"comboBox_1d_4b")
-        sizePolicy1.setHeightForWidth(self.comboBox_1d_4b.sizePolicy().hasHeightForWidth())
-        self.comboBox_1d_4b.setSizePolicy(sizePolicy1)
+        self.comboBox_m_4b = QComboBox(self.tab_4b)
+        self.comboBox_m_4b.setObjectName(u"comboBox_m_4b")
+        sizePolicy1.setHeightForWidth(self.comboBox_m_4b.sizePolicy().hasHeightForWidth())
+        self.comboBox_m_4b.setSizePolicy(sizePolicy1)
 
-        self.gridLayout_2.addWidget(self.comboBox_1d_4b, 1, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.comboBox_m_4b, 1, 3, 1, 1)
+
+        self.comboBox_2d_4b = QComboBox(self.tab_4b)
+        self.comboBox_2d_4b.setObjectName(u"comboBox_2d_4b")
+        sizePolicy1.setHeightForWidth(self.comboBox_2d_4b.sizePolicy().hasHeightForWidth())
+        self.comboBox_2d_4b.setSizePolicy(sizePolicy1)
+
+        self.gridLayout_2.addWidget(self.comboBox_2d_4b, 1, 2, 1, 1)
+
+        self.horizontalSpacer_20 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_2.addItem(self.horizontalSpacer_20, 1, 0, 1, 1)
 
         self.gridLayout_2.setColumnStretch(0, 10)
-        self.gridLayout_2.setColumnStretch(1, 10)
-        self.gridLayout_2.setColumnStretch(2, 20)
-        self.gridLayout_2.setColumnStretch(3, 20)
 
         self.verticalLayout_2.addLayout(self.gridLayout_2)
 
@@ -130,26 +136,26 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.horizontalLayout_3.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
         self.gridLayout = QGridLayout()
         self.gridLayout.setObjectName(u"gridLayout")
+        self.gridLayout.setSizeConstraint(QLayout.SizeConstraint.SetNoConstraint)
         self.gridLayout.setHorizontalSpacing(10)
         self.gridLayout.setVerticalSpacing(6)
-        self.lineEdit_resistance_4b = QLineEdit(self.tab_4b)
-        self.lineEdit_resistance_4b.setObjectName(u"lineEdit_resistance_4b")
-        self.lineEdit_resistance_4b.setStyleSheet(u"background-color: rgb(234, 234, 234);")
-        self.lineEdit_resistance_4b.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lineEdit_resistance_4b.setReadOnly(True)
+        self.label_resistance_4b = QLabel(self.tab_4b)
+        self.label_resistance_4b.setObjectName(u"label_resistance_4b")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.label_resistance_4b.sizePolicy().hasHeightForWidth())
+        self.label_resistance_4b.setSizePolicy(sizePolicy2)
+        self.label_resistance_4b.setMinimumSize(QSize(80, 0))
+        font = QFont()
+        font.setPointSize(14)
+        self.label_resistance_4b.setFont(font)
+        self.label_resistance_4b.setTextFormat(Qt.TextFormat.PlainText)
 
-        self.gridLayout.addWidget(self.lineEdit_resistance_4b, 1, 2, 1, 1)
-
-        self.checkBox = QCheckBox(self.tab_4b)
-        self.checkBox.setObjectName(u"checkBox")
-
-        self.gridLayout.addWidget(self.checkBox, 1, 1, 1, 1)
-
-        self.verticalSpacer_7 = QSpacerItem(20, 1, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout.addItem(self.verticalSpacer_7, 0, 0, 1, 1)
+        self.gridLayout.addWidget(self.label_resistance_4b, 1, 3, 1, 1)
 
         self.label_2 = QLabel(self.tab_4b)
         self.label_2.setObjectName(u"label_2")
@@ -161,45 +167,109 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.label, 1, 0, 1, 1)
 
-        self.lineEdit_resistance_max_4b = QLineEdit(self.tab_4b)
-        self.lineEdit_resistance_max_4b.setObjectName(u"lineEdit_resistance_max_4b")
-        self.lineEdit_resistance_max_4b.setStyleSheet(u"background-color: rgb(234, 234, 234);")
-        self.lineEdit_resistance_max_4b.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lineEdit_resistance_max_4b.setReadOnly(True)
+        self.verticalSpacer_7 = QSpacerItem(20, 1, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.gridLayout.addWidget(self.lineEdit_resistance_max_4b, 3, 2, 1, 1)
+        self.gridLayout.addItem(self.verticalSpacer_7, 0, 0, 1, 1)
 
         self.lineEdit_resistance_min_4b = QLineEdit(self.tab_4b)
         self.lineEdit_resistance_min_4b.setObjectName(u"lineEdit_resistance_min_4b")
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.lineEdit_resistance_min_4b.sizePolicy().hasHeightForWidth())
+        self.lineEdit_resistance_min_4b.setSizePolicy(sizePolicy3)
         self.lineEdit_resistance_min_4b.setStyleSheet(u"background-color: rgb(234, 234, 234);")
         self.lineEdit_resistance_min_4b.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lineEdit_resistance_min_4b.setReadOnly(True)
 
         self.gridLayout.addWidget(self.lineEdit_resistance_min_4b, 2, 2, 1, 1)
 
+        self.lineEdit_resistance_4b = QLineEdit(self.tab_4b)
+        self.lineEdit_resistance_4b.setObjectName(u"lineEdit_resistance_4b")
+        sizePolicy3.setHeightForWidth(self.lineEdit_resistance_4b.sizePolicy().hasHeightForWidth())
+        self.lineEdit_resistance_4b.setSizePolicy(sizePolicy3)
+        self.lineEdit_resistance_4b.setMinimumSize(QSize(0, 0))
+        self.lineEdit_resistance_4b.setStyleSheet(u"background-color: rgb(234, 234, 234);")
+        self.lineEdit_resistance_4b.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.lineEdit_resistance_4b.setReadOnly(True)
+
+        self.gridLayout.addWidget(self.lineEdit_resistance_4b, 1, 2, 1, 1)
+
         self.label_11 = QLabel(self.tab_4b)
         self.label_11.setObjectName(u"label_11")
 
         self.gridLayout.addWidget(self.label_11, 3, 0, 1, 1)
 
-        self.label_resistance_4b = QLabel(self.tab_4b)
-        self.label_resistance_4b.setObjectName(u"label_resistance_4b")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.label_resistance_4b.sizePolicy().hasHeightForWidth())
-        self.label_resistance_4b.setSizePolicy(sizePolicy2)
-        self.label_resistance_4b.setMinimumSize(QSize(100, 0))
-        self.label_resistance_4b.setTextFormat(Qt.TextFormat.PlainText)
+        self.lineEdit_resistance_max_4b = QLineEdit(self.tab_4b)
+        self.lineEdit_resistance_max_4b.setObjectName(u"lineEdit_resistance_max_4b")
+        sizePolicy3.setHeightForWidth(self.lineEdit_resistance_max_4b.sizePolicy().hasHeightForWidth())
+        self.lineEdit_resistance_max_4b.setSizePolicy(sizePolicy3)
+        self.lineEdit_resistance_max_4b.setStyleSheet(u"background-color: rgb(234, 234, 234);")
+        self.lineEdit_resistance_max_4b.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.lineEdit_resistance_max_4b.setReadOnly(True)
 
-        self.gridLayout.addWidget(self.label_resistance_4b, 1, 3, 1, 1)
+        self.gridLayout.addWidget(self.lineEdit_resistance_max_4b, 3, 2, 1, 1)
+
+        self.label_t_4b = QLabel(self.tab_4b)
+        self.label_t_4b.setObjectName(u"label_t_4b")
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.label_t_4b.sizePolicy().hasHeightForWidth())
+        self.label_t_4b.setSizePolicy(sizePolicy4)
+        self.label_t_4b.setMinimumSize(QSize(40, 0))
+
+        self.gridLayout.addWidget(self.label_t_4b, 1, 1, 1, 1)
+
+        self.label_t_min_4b = QLabel(self.tab_4b)
+        self.label_t_min_4b.setObjectName(u"label_t_min_4b")
+
+        self.gridLayout.addWidget(self.label_t_min_4b, 2, 1, 1, 1)
+
+        self.label_t_max_4b = QLabel(self.tab_4b)
+        self.label_t_max_4b.setObjectName(u"label_t_max_4b")
+
+        self.gridLayout.addWidget(self.label_t_max_4b, 3, 1, 1, 1)
 
 
         self.horizontalLayout_3.addLayout(self.gridLayout)
 
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.groupBox = QGroupBox(self.tab_4b)
+        self.groupBox.setObjectName(u"groupBox")
+        sizePolicy.setHeightForWidth(self.groupBox.sizePolicy().hasHeightForWidth())
+        self.groupBox.setSizePolicy(sizePolicy)
+        self.groupBox.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.formLayout_2 = QFormLayout(self.groupBox)
+        self.formLayout_2.setObjectName(u"formLayout_2")
+        self.formLayout_2.setLabelAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.lineEdit_ohm_4d = QLineEdit(self.groupBox)
+        self.lineEdit_ohm_4d.setObjectName(u"lineEdit_ohm_4d")
+        self.lineEdit_ohm_4d.setEnabled(False)
+        sizePolicy3.setHeightForWidth(self.lineEdit_ohm_4d.sizePolicy().hasHeightForWidth())
+        self.lineEdit_ohm_4d.setSizePolicy(sizePolicy3)
+        self.lineEdit_ohm_4d.setMaxLength(9)
+        self.lineEdit_ohm_4d.setEchoMode(QLineEdit.EchoMode.Normal)
 
-        self.horizontalLayout_3.addItem(self.horizontalSpacer)
+        self.formLayout_2.setWidget(0, QFormLayout.ItemRole.LabelRole, self.lineEdit_ohm_4d)
+
+        self.comboBox_ohm_4d = QComboBox(self.groupBox)
+        self.comboBox_ohm_4d.setObjectName(u"comboBox_ohm_4d")
+        self.comboBox_ohm_4d.setEnabled(False)
+
+        self.formLayout_2.setWidget(0, QFormLayout.ItemRole.FieldRole, self.comboBox_ohm_4d)
+
+        self.checkBox_ohm_edit_4b = QCheckBox(self.groupBox)
+        self.checkBox_ohm_edit_4b.setObjectName(u"checkBox_ohm_edit_4b")
+        self.checkBox_ohm_edit_4b.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+
+        self.formLayout_2.setWidget(1, QFormLayout.ItemRole.LabelRole, self.checkBox_ohm_edit_4b)
+
+
+        self.horizontalLayout_3.addWidget(self.groupBox)
+
+        self.horizontalSpacer_21 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_3.addItem(self.horizontalSpacer_21)
 
 
         self.verticalLayout_2.addLayout(self.horizontalLayout_3)
@@ -358,8 +428,11 @@ class Ui_MainWindow(object):
 
         self.label_resistance_5b = QLabel(self.tab_5b)
         self.label_resistance_5b.setObjectName(u"label_resistance_5b")
-        sizePolicy2.setHeightForWidth(self.label_resistance_5b.sizePolicy().hasHeightForWidth())
-        self.label_resistance_5b.setSizePolicy(sizePolicy2)
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.label_resistance_5b.sizePolicy().hasHeightForWidth())
+        self.label_resistance_5b.setSizePolicy(sizePolicy5)
         self.label_resistance_5b.setMinimumSize(QSize(100, 0))
 
         self.gridLayout_3.addWidget(self.label_resistance_5b, 1, 3, 1, 1)
@@ -646,6 +719,7 @@ class Ui_MainWindow(object):
 
         self.lineEdit_resistance_smd = QLineEdit(self.tab_smd)
         self.lineEdit_resistance_smd.setObjectName(u"lineEdit_resistance_smd")
+        self.lineEdit_resistance_smd.setStyleSheet(u"background-color: rgb(234, 234, 234);")
         self.lineEdit_resistance_smd.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lineEdit_resistance_smd.setReadOnly(True)
 
@@ -658,6 +732,7 @@ class Ui_MainWindow(object):
 
         self.lineEdit_resistance_min_smd = QLineEdit(self.tab_smd)
         self.lineEdit_resistance_min_smd.setObjectName(u"lineEdit_resistance_min_smd")
+        self.lineEdit_resistance_min_smd.setStyleSheet(u"background-color: rgb(234, 234, 234);")
         self.lineEdit_resistance_min_smd.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lineEdit_resistance_min_smd.setReadOnly(True)
 
@@ -670,6 +745,7 @@ class Ui_MainWindow(object):
 
         self.lineEdit_resistance_max_smd = QLineEdit(self.tab_smd)
         self.lineEdit_resistance_max_smd.setObjectName(u"lineEdit_resistance_max_smd")
+        self.lineEdit_resistance_max_smd.setStyleSheet(u"background-color: rgb(234, 234, 234);")
         self.lineEdit_resistance_max_smd.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lineEdit_resistance_max_smd.setReadOnly(True)
 
@@ -690,15 +766,223 @@ class Ui_MainWindow(object):
         self.verticalLayout.addLayout(self.horizontalLayout)
 
         self.tabWidget.addTab(self.tab_smd, "")
+        self.tab_2 = QWidget()
+        self.tab_2.setObjectName(u"tab_2")
+        self.verticalLayout_4 = QVBoxLayout(self.tab_2)
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.horizontalLayout_10 = QHBoxLayout()
+        self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
+        self.verticalLayout_6 = QVBoxLayout()
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.horizontalLayout_12 = QHBoxLayout()
+        self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
+        self.label_44 = QLabel(self.tab_2)
+        self.label_44.setObjectName(u"label_44")
+        sizePolicy6 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        sizePolicy6.setHorizontalStretch(0)
+        sizePolicy6.setVerticalStretch(0)
+        sizePolicy6.setHeightForWidth(self.label_44.sizePolicy().hasHeightForWidth())
+        self.label_44.setSizePolicy(sizePolicy6)
+
+        self.horizontalLayout_12.addWidget(self.label_44)
+
+        self.rB_csmd = QCheckBox(self.tab_2)
+        self.rB_csmd.setObjectName(u"rB_csmd")
+        sizePolicy7 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        sizePolicy7.setHorizontalStretch(0)
+        sizePolicy7.setVerticalStretch(0)
+        sizePolicy7.setHeightForWidth(self.rB_csmd.sizePolicy().hasHeightForWidth())
+        self.rB_csmd.setSizePolicy(sizePolicy7)
+
+        self.horizontalLayout_12.addWidget(self.rB_csmd)
+
+        self.label_45 = QLabel(self.tab_2)
+        self.label_45.setObjectName(u"label_45")
+        sizePolicy5.setHeightForWidth(self.label_45.sizePolicy().hasHeightForWidth())
+        self.label_45.setSizePolicy(sizePolicy5)
+
+        self.horizontalLayout_12.addWidget(self.label_45)
+
+
+        self.verticalLayout_6.addLayout(self.horizontalLayout_12)
+
+        self.horizontalLayout_11 = QHBoxLayout()
+        self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
+        self.csmd_digit1 = QSpinBox(self.tab_2)
+        self.csmd_digit1.setObjectName(u"csmd_digit1")
+        self.csmd_digit1.setMinimum(1)
+        self.csmd_digit1.setMaximum(9)
+
+        self.horizontalLayout_11.addWidget(self.csmd_digit1)
+
+        self.csmd_digit2 = QComboBox(self.tab_2)
+        self.csmd_digit2.setObjectName(u"csmd_digit2")
+
+        self.horizontalLayout_11.addWidget(self.csmd_digit2)
+
+        self.csmd_digit3 = QComboBox(self.tab_2)
+        self.csmd_digit3.setObjectName(u"csmd_digit3")
+
+        self.horizontalLayout_11.addWidget(self.csmd_digit3)
+
+        self.csmd_digit4 = QComboBox(self.tab_2)
+        self.csmd_digit4.setObjectName(u"csmd_digit4")
+        self.csmd_digit4.setEnabled(False)
+
+        self.horizontalLayout_11.addWidget(self.csmd_digit4)
+
+
+        self.verticalLayout_6.addLayout(self.horizontalLayout_11)
+
+
+        self.horizontalLayout_10.addLayout(self.verticalLayout_6)
+
+        self.horizontalSpacer_19 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_10.addItem(self.horizontalSpacer_19)
+
+        self.verticalLayout_9 = QVBoxLayout()
+        self.verticalLayout_9.setObjectName(u"verticalLayout_9")
+        self.horizontalLayout_13 = QHBoxLayout()
+        self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_13.addItem(self.horizontalSpacer_3)
+
+        self.cb_csmd_198 = QCheckBox(self.tab_2)
+        self.cb_csmd_198.setObjectName(u"cb_csmd_198")
+
+        self.horizontalLayout_13.addWidget(self.cb_csmd_198)
+
+        self.label_46 = QLabel(self.tab_2)
+        self.label_46.setObjectName(u"label_46")
+
+        self.horizontalLayout_13.addWidget(self.label_46)
+
+
+        self.verticalLayout_9.addLayout(self.horizontalLayout_13)
+
+        self.horizontalLayout_14 = QHBoxLayout()
+        self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
+        self.cmb_csmb198_1 = QComboBox(self.tab_2)
+        self.cmb_csmb198_1.setObjectName(u"cmb_csmb198_1")
+        self.cmb_csmb198_1.setMaxVisibleItems(1)
+
+        self.horizontalLayout_14.addWidget(self.cmb_csmb198_1)
+
+        self.cmb_csmb198_2 = QSpinBox(self.tab_2)
+        self.cmb_csmb198_2.setObjectName(u"cmb_csmb198_2")
+        self.cmb_csmb198_2.setEnabled(False)
+        self.cmb_csmb198_2.setMaximum(9)
+
+        self.horizontalLayout_14.addWidget(self.cmb_csmb198_2)
+
+
+        self.verticalLayout_9.addLayout(self.horizontalLayout_14)
+
+
+        self.horizontalLayout_10.addLayout(self.verticalLayout_9)
+
+
+        self.verticalLayout_4.addLayout(self.horizontalLayout_10)
+
+        self.horizontalLayout_smd_svg_c = QHBoxLayout()
+        self.horizontalLayout_smd_svg_c.setObjectName(u"horizontalLayout_smd_svg_c")
+        self.horizontalLayout_smd_svg_c.setContentsMargins(-1, -1, -1, 20)
+        self.horizontalSpacer_17 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_smd_svg_c.addItem(self.horizontalSpacer_17)
+
+        self.widget = QWidget(self.tab_2)
+        self.widget.setObjectName(u"widget")
+        self.widget.setEnabled(True)
+        sizePolicy7.setHeightForWidth(self.widget.sizePolicy().hasHeightForWidth())
+        self.widget.setSizePolicy(sizePolicy7)
+        self.widget.setMinimumSize(QSize(355, 150))
+        font1 = QFont()
+        font1.setPointSize(72)
+        self.widget.setFont(font1)
+        self.widget.setStyleSheet(u"background-image: url(:/general/capacitor_smd.svg);")
+        self.csmd_le1 = QLineEdit(self.widget)
+        self.csmd_le1.setObjectName(u"csmd_le1")
+        self.csmd_le1.setGeometry(QRect(70, 20, 221, 91))
+        self.csmd_le1.setFont(font1)
+        self.csmd_le1.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.csmd_le1.setStyleSheet(u"background: transparent; color: white")
+        self.csmd_le1.setMaxLength(4)
+        self.csmd_le1.setFrame(False)
+        self.csmd_le1.setReadOnly(True)
+
+        self.horizontalLayout_smd_svg_c.addWidget(self.widget)
+
+        self.horizontalSpacer_16 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_smd_svg_c.addItem(self.horizontalSpacer_16)
+
+
+        self.verticalLayout_4.addLayout(self.horizontalLayout_smd_svg_c)
+
+        self.horizontalLayout_9 = QHBoxLayout()
+        self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
+        self.gridLayout_5 = QGridLayout()
+        self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.label_43 = QLabel(self.tab_2)
+        self.label_43.setObjectName(u"label_43")
+
+        self.gridLayout_5.addWidget(self.label_43, 2, 0, 1, 1)
+
+        self.lineEdit_3 = QLineEdit(self.tab_2)
+        self.lineEdit_3.setObjectName(u"lineEdit_3")
+        self.lineEdit_3.setStyleSheet(u"background-color: rgb(234, 234, 234);")
+
+        self.gridLayout_5.addWidget(self.lineEdit_3, 2, 1, 1, 1)
+
+        self.label_42 = QLabel(self.tab_2)
+        self.label_42.setObjectName(u"label_42")
+
+        self.gridLayout_5.addWidget(self.label_42, 1, 0, 1, 1)
+
+        self.label_41 = QLabel(self.tab_2)
+        self.label_41.setObjectName(u"label_41")
+
+        self.gridLayout_5.addWidget(self.label_41, 0, 0, 1, 1)
+
+        self.lineEdit_2 = QLineEdit(self.tab_2)
+        self.lineEdit_2.setObjectName(u"lineEdit_2")
+        self.lineEdit_2.setStyleSheet(u"background-color: rgb(234, 234, 234);")
+
+        self.gridLayout_5.addWidget(self.lineEdit_2, 1, 1, 1, 1)
+
+        self.csmd_le_cap = QLineEdit(self.tab_2)
+        self.csmd_le_cap.setObjectName(u"csmd_le_cap")
+        self.csmd_le_cap.setStyleSheet(u"background-color: rgb(234, 234, 234);")
+
+        self.gridLayout_5.addWidget(self.csmd_le_cap, 0, 1, 1, 1)
+
+        self.cmb_csmb_cap = QComboBox(self.tab_2)
+        self.cmb_csmb_cap.setObjectName(u"cmb_csmb_cap")
+
+        self.gridLayout_5.addWidget(self.cmb_csmb_cap, 0, 2, 1, 1)
+
+
+        self.horizontalLayout_9.addLayout(self.gridLayout_5)
+
+        self.horizontalSpacer_18 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_9.addItem(self.horizontalSpacer_18)
+
+
+        self.verticalLayout_4.addLayout(self.horizontalLayout_9)
+
+        self.tabWidget.addTab(self.tab_2, "")
         self.tab = QWidget()
         self.tab.setObjectName(u"tab")
+        self.verticalLayout_8 = QVBoxLayout(self.tab)
+        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.tableWidget = QTableWidget(self.tab)
-        if (self.tableWidget.columnCount() < 3):
-            self.tableWidget.setColumnCount(3)
-        font = QFont()
-        font.setPointSize(14)
+        if (self.tableWidget.columnCount() < 6):
+            self.tableWidget.setColumnCount(6)
         __qtablewidgetitem = QTableWidgetItem()
-        __qtablewidgetitem.setFont(font);
         self.tableWidget.setHorizontalHeaderItem(0, __qtablewidgetitem)
         __qtablewidgetitem1 = QTableWidgetItem()
         __qtablewidgetitem1.setFont(font);
@@ -706,8 +990,21 @@ class Ui_MainWindow(object):
         __qtablewidgetitem2 = QTableWidgetItem()
         __qtablewidgetitem2.setFont(font);
         self.tableWidget.setHorizontalHeaderItem(2, __qtablewidgetitem2)
+        __qtablewidgetitem3 = QTableWidgetItem()
+        __qtablewidgetitem3.setFont(font);
+        self.tableWidget.setHorizontalHeaderItem(3, __qtablewidgetitem3)
+        __qtablewidgetitem4 = QTableWidgetItem()
+        __qtablewidgetitem4.setFont(font);
+        self.tableWidget.setHorizontalHeaderItem(4, __qtablewidgetitem4)
+        __qtablewidgetitem5 = QTableWidgetItem()
+        self.tableWidget.setHorizontalHeaderItem(5, __qtablewidgetitem5)
         self.tableWidget.setObjectName(u"tableWidget")
-        self.tableWidget.setGeometry(QRect(110, 10, 351, 361))
+        self.tableWidget.setStyleSheet(u"background-color: rgb(236, 236, 236);")
+        self.tableWidget.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.tableWidget.setDragDropOverwriteMode(False)
+
+        self.verticalLayout_8.addWidget(self.tableWidget)
+
         self.tabWidget.addTab(self.tab, "")
         self.about = QWidget()
         self.about.setObjectName(u"about")
@@ -728,9 +1025,9 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.label_16 = QLabel(self.about)
         self.label_16.setObjectName(u"label_16")
-        font1 = QFont()
-        font1.setPointSize(16)
-        self.label_16.setFont(font1)
+        font2 = QFont()
+        font2.setPointSize(16)
+        self.label_16.setFont(font2)
 
         self.verticalLayout_3.addWidget(self.label_16)
 
@@ -806,11 +1103,11 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.pushButton_license = QPushButton(self.about)
         self.pushButton_license.setObjectName(u"pushButton_license")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.pushButton_license.sizePolicy().hasHeightForWidth())
-        self.pushButton_license.setSizePolicy(sizePolicy3)
+        sizePolicy8 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        sizePolicy8.setHorizontalStretch(0)
+        sizePolicy8.setVerticalStretch(0)
+        sizePolicy8.setHeightForWidth(self.pushButton_license.sizePolicy().hasHeightForWidth())
+        self.pushButton_license.setSizePolicy(sizePolicy8)
 
         self.horizontalLayout_2.addWidget(self.pushButton_license)
 
@@ -832,8 +1129,19 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
+        self.cb_csmd_198.toggled.connect(self.cmb_csmb198_1.setEnabled)
+        self.cb_csmd_198.toggled.connect(self.cmb_csmb198_2.setEnabled)
+        self.cb_csmd_198.toggled.connect(self.rB_csmd.setDisabled)
+        self.cb_csmd_198.toggled.connect(self.csmd_digit1.setDisabled)
+        self.cb_csmd_198.toggled.connect(self.rB_csmd.toggle)
+        self.rB_csmd.toggled.connect(self.csmd_digit4.setEnabled)
+        self.cb_csmd_198.toggled.connect(self.csmd_digit2.setDisabled)
+        self.cb_csmd_198.toggled.connect(self.csmd_digit3.setDisabled)
+        self.checkBox_ohm_edit_4b.toggled.connect(self.lineEdit_ohm_4d.setEnabled)
+        self.checkBox_ohm_edit_4b.toggled.connect(self.comboBox_ohm_4d.setEnabled)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
+        self.cmb_csmb198_1.setCurrentIndex(-1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -841,15 +1149,21 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.label_4.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>2<span style=\" vertical-align:super;\">nd</span> Digit</p></body></html>", None))
-        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Tolerance", None))
         self.label_12.setText(QCoreApplication.translate("MainWindow", u"Multiplier", None))
+        self.label_4.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>2<span style=\" vertical-align:super;\">nd</span> Digit</p></body></html>", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>1<span style=\" vertical-align:super;\">st</span> Digit</p></body></html>", None))
-        self.checkBox.setText(QCoreApplication.translate("MainWindow", u"edit", None))
+        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Tolerance", None))
+        self.label_resistance_4b.setText("")
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Minimum", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Resistance", None))
         self.label_11.setText(QCoreApplication.translate("MainWindow", u"Maximum", None))
-        self.label_resistance_4b.setText("")
+        self.label_t_4b.setText("")
+        self.label_t_min_4b.setText("")
+        self.label_t_max_4b.setText("")
+        self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"Ohm Editor", None))
+        self.lineEdit_ohm_4d.setInputMask("")
+        self.lineEdit_ohm_4d.setPlaceholderText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.checkBox_ohm_edit_4b.setText(QCoreApplication.translate("MainWindow", u"enable", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4b), QCoreApplication.translate("MainWindow", u"4 Band", None))
         self.label_8.setText(QCoreApplication.translate("MainWindow", u"Tolerance", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>1<span style=\" vertical-align:super;\">st</span> Digit</p></body></html>", None))
@@ -889,13 +1203,32 @@ class Ui_MainWindow(object):
         self.label_35.setText(QCoreApplication.translate("MainWindow", u"Resistance", None))
         self.label_36.setText(QCoreApplication.translate("MainWindow", u"Minimum", None))
         self.label_37.setText(QCoreApplication.translate("MainWindow", u"Maximum", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_smd), QCoreApplication.translate("MainWindow", u"SMD", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_smd), QCoreApplication.translate("MainWindow", u"R SMD", None))
+        self.label_44.setText(QCoreApplication.translate("MainWindow", u"3 Digits", None))
+        self.rB_csmd.setText("")
+        self.label_45.setText(QCoreApplication.translate("MainWindow", u"4 Digits", None))
+        self.cb_csmd_198.setText("")
+        self.label_46.setText(QCoreApplication.translate("MainWindow", u"EIA-198", None))
+        self.csmd_le1.setText("")
+        self.csmd_le1.setPlaceholderText(QCoreApplication.translate("MainWindow", u"1", None))
+        self.label_43.setText(QCoreApplication.translate("MainWindow", u"Maximum", None))
+        self.label_42.setText(QCoreApplication.translate("MainWindow", u"Minimum", None))
+        self.label_41.setText(QCoreApplication.translate("MainWindow", u"Capacity", None))
+        self.cmb_csmb_cap.setCurrentText("")
+        self.cmb_csmb_cap.setPlaceholderText("")
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"C SMD", None))
         ___qtablewidgetitem = self.tableWidget.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"E24", None));
+        ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"C-Letter", None));
         ___qtablewidgetitem1 = self.tableWidget.horizontalHeaderItem(1)
-        ___qtablewidgetitem1.setText(QCoreApplication.translate("MainWindow", u"E48", None));
+        ___qtablewidgetitem1.setText(QCoreApplication.translate("MainWindow", u"E24", None));
         ___qtablewidgetitem2 = self.tableWidget.horizontalHeaderItem(2)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("MainWindow", u"E96", None));
+        ___qtablewidgetitem2.setText(QCoreApplication.translate("MainWindow", u"E48", None));
+        ___qtablewidgetitem3 = self.tableWidget.horizontalHeaderItem(3)
+        ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"E96", None));
+        ___qtablewidgetitem4 = self.tableWidget.horizontalHeaderItem(4)
+        ___qtablewidgetitem4.setText(QCoreApplication.translate("MainWindow", u"EIA 198", None));
+        ___qtablewidgetitem5 = self.tableWidget.horizontalHeaderItem(5)
+        ___qtablewidgetitem5.setText(QCoreApplication.translate("MainWindow", u"EIA", None));
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"E-Series", None))
         self.label_32.setText("")
         self.label_16.setText(QCoreApplication.translate("MainWindow", u"ResistorEnDecode", None))
