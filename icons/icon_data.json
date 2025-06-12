@@ -67,84 +67,96 @@
             "idx": "0",
             "icon": ":/colors/Color Squares/black.png",
             "exponent": 0,
-            "text": "1 Ω"
+            "text": "1 Ω",
+            "data": "1"
         },
         {
             "color": "brown",
             "idx": "1",
             "icon": ":/colors/Color Squares/brown.png",
             "exponent": 1,
-            "text": "10 Ω"
+            "text": "10 Ω",
+            "data": "10"
         },
         {
             "color": "red",
             "idx": "2",
             "icon": ":/colors/Color Squares/red.png",
             "exponent": 2,
-            "text": "100 Ω"
+            "text": "100 Ω",
+            "data": "100"
         },
         {
             "color": "orange",
             "idx": "3",
             "icon": ":/colors/Color Squares/orange.png",
             "exponent": 3,
-            "text": "1 kΩ"
+            "text": "1 kΩ",
+            "data": "1000"
         },
         {
             "color": "yellow",
             "idx": "4",
             "icon": ":/colors/Color Squares/yellow.png",
             "exponent": 4,
-            "text": "10 kΩ"
+            "text": "10 kΩ",
+            "data": "10000"
         },
         {
             "color": "green",
             "idx": "5",
             "icon": ":/colors/Color Squares/green.png",
             "exponent": 5,
-            "text": "100 kΩ"
+            "text": "100 kΩ",
+            "data": "100000"
         },
         {
             "color": "blue",
             "idx": "6",
             "icon": ":/colors/Color Squares/blue.png",
             "exponent": 6,
-            "text": "1 MΩ"
+            "text": "1 MΩ",
+            "data": "1000000"
         },
         {
             "color": "violet",
             "idx": "7",
             "icon": ":/colors/Color Squares/violet.png",
             "exponent": 7,
-            "text": "10 MΩ"
+            "text": "10 MΩ",
+            "data": "10000000"
         },
         {
             "color": "gray",
             "idx": "8",
             "icon": ":/colors/Color Squares/gray.png",
             "exponent": 8,
-            "text": "100 MΩ"
+            "text": "100 MΩ",
+            "data": "100000000"
         },
         {
             "color": "white",
             "idx": "9",
             "icon": ":/colors/Color Squares/white.png",
             "exponent": 9,
-            "text": "1 GΩ"
+            "text": "1 GΩ",
+            "data": "1000000000"
         },
         {
             "color": "gold",
             "idx": "10",
             "icon": ":/colors/Color Squares/gold.png",
             "exponent": -1,
-            "text": "100 mΩ"
+            "text": "100 mΩ",
+            "data": "0.1"
         },
         {
             "color": "silver",
             "idx": "11",
             "icon": ":/colors/Color Squares/silver.png",
             "exponent": -2,
-            "text": "10 mΩ"
+            "text": "10 mΩ",
+            "data": "0.01"
         }
     ],
     "tolerance": [

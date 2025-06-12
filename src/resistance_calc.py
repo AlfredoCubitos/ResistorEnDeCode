@@ -77,8 +77,8 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         self.comboBox_2d_4b.currentIndexChanged.connect(self.calculate_res_4b)
         self.comboBox_m_4b.currentIndexChanged.connect(self.calculate_res_4b)
         self.comboBox_t_4b.currentIndexChanged.connect(self.calculate_res_4b)
-        # self.lineEdit_resistance_4b.editingFinished.connect(self.calculate_4b)
-        
+        self.lineEdit_ohm_4d.editingFinished.connect(self.lineEditingFinished4b)
+
         self.lineEdit_ohm_4d.cursorPositionChanged.connect(self.validateLineEdit4b)
 
         self.comboBox_1d_5b.currentIndexChanged.connect(self.calculate_res_5b)
@@ -114,6 +114,7 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
             print("Error: Unable to read capacitor_smd.svg")
         self.svg_data_smd_c = file.readAll()
 
+        self.comboBox_1d_4b.setCurrentIndex(1)
         # Set the default tolerance to the most common band, gold
         self.comboBox_t_4b.setCurrentIndex(8)
         self.comboBox_t_5b.setCurrentIndex(8)
@@ -215,8 +216,6 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
     def setCapacities(self):
         for v in gh.CAPACITY:
             self.cmb_csmb_cap.addItem(v[0])
-
-    
 
     def set_edit_state5b(self):
         if not self.checkBox_5b.isChecked():
@@ -410,21 +409,19 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         tolid = self.comboBox_t_4b.currentIndex()
         tolerance = self.json["tolerance"][tolid]["value"]
         mantissa = int(digit1 + digit2)
-        print("Tol: ", tolerance)
+
         value, min_value, max_value, post_fix = gh.calculate_values(
             tolerance, mantissa, divisor
         )
-
-        # r, attr = gh.edit_format_resistance(value, 3)
 
         self.lineEdit_resistance_4b.setText(f"{value}")
         self.label_resistance_4b.setText(f"{post_fix}")
         self.lineEdit_resistance_min_4b.setText(str(min_value))
         self.lineEdit_resistance_max_4b.setText(str(max_value))
         self.lineEdit_ohm_4d.setText(f"{value}")
+        self.label_t_min_4b.setText(f"- {tolerance}%")
+        self.label_t_max_4b.setText(f"+ {tolerance}%")
 
-        # o = f"{attr}".strip()
-        # print("O: ", o, " ", self.comboBox_ohm_4d.findText(o, Qc.Qt.MatchFixedString))
         self.comboBox_ohm_4d.setCurrentIndex(
             self.comboBox_ohm_4d.findText(post_fix, Qc.Qt.MatchFixedString)
         )
@@ -433,13 +430,59 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         # calculate_res_4b
 
     def validateLineEdit4b(self):
-        valid = self.lineEdit_ohm_4d.hasAcceptableInput
+        valid = self.lineEdit_ohm_4d.hasAcceptableInput()
         if valid:
             ss = "background-color: #aaff85"
         else:
             ss = "background-color: #ff8088"
 
         self.lineEdit_ohm_4d.setStyleSheet(ss)
+
+    def lineEditingFinished4b(self):
+        value = float(self.lineEdit_ohm_4d.text())
+        multi = self.comboBox_ohm_4d.currentData()
+        ohm = int(value * 10**multi)
+        digits = str(ohm)
+        if len(digits) > 1:
+            digit2 = digits[1]
+        elif int(digits[0]) < 1:
+            return
+        else:
+            digit2 = ""
+
+        multiplier = int(ohm) / int(digits[0] + digit2)
+
+        self.comboBox_1d_4b.currentIndexChanged.disconnect()
+        self.comboBox_2d_4b.currentIndexChanged.disconnect()
+        # self.comboBox_m_4b.currentIndexChanged.disconnect()
+
+        self.comboBox_1d_4b.setCurrentIndex(int(digits[0]))
+
+        print(
+            digits[0],
+            " ",
+            digits[1],
+            " ",
+            ohm,
+            " ",
+            self.comboBox_m_4b.findData(
+                str(int(multiplier)), flags=Qc.Qt.MatchFlag.MatchFixedString
+            ),
+        )
+
+        if len(digits) > 1:
+            self.comboBox_2d_4b.setCurrentIndex(int(digits[1]))
+        idx = self.comboBox_m_4b.findData(
+            str(int(multiplier)), flags=Qc.Qt.MatchFlag.MatchFixedString
+        )
+        self.comboBox_m_4b.setCurrentIndex(idx - 1)
+
+        # self.calculate_4b()
+        self.comboBox_1d_4b.currentIndexChanged.connect(self.calculate_res_4b)
+        self.comboBox_2d_4b.currentIndexChanged.connect(self.calculate_res_4b)
+        # self.comboBox_m_4b.currentIndexChanged.connect(self.calculate_res_4b)
+
+        pass
 
     def initValidator(self, line):
         edit = Qg.QDoubleValidator()
@@ -567,8 +610,10 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         self.attachComboRs(6, self.comboBox_tcr_6b, "trc")
 
         self.comboBox_ohm_4d.addItems(["mΩ", "Ω", "kΩ", "MΩ"])
-        self.comboBox_ohm_4d.setItemData(1, "Ω")
-        self.comboBox_ohm_4d.setCurrentIndex(1)
+        self.comboBox_ohm_4d.setItemData(0, -3)
+        self.comboBox_ohm_4d.setItemData(1, 1)
+        self.comboBox_ohm_4d.setItemData(2, 3)
+        self.comboBox_ohm_4d.setItemData(3, 6)
 
         self.comboBox_t_4b.setCurrentIndex(2)
         self.comboBox_t_5b.setCurrentIndex(1)
@@ -591,7 +636,7 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
             data = self.json["multiplier"]
             for i in range(0, len(data)):
                 ico = data[i]
-                combobox.addItem(Qg.QIcon(ico["icon"]), ico["text"])
+                combobox.addItem(Qg.QIcon(ico["icon"]), ico["text"], ico["data"])
         if typ == "tolerance":
             data = self.json["tolerance"]
             for i in range(0, len(data)):
