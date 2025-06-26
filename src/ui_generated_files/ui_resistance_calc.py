@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'ui_resistance_calcEnlzxI.ui'
+## Form generated from reading UI file 'ui_resistance_calcRnRSgD.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.9.1
 ##
@@ -996,43 +996,53 @@ class Ui_MainWindow(object):
         self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
         self.gridLayout_5 = QGridLayout()
         self.gridLayout_5.setObjectName(u"gridLayout_5")
-        self.label_43 = QLabel(self.tab_2)
-        self.label_43.setObjectName(u"label_43")
+        self.csmd_le_cap = QLineEdit(self.tab_2)
+        self.csmd_le_cap.setObjectName(u"csmd_le_cap")
+        self.csmd_le_cap.setStyleSheet(u"background-color: rgb(234, 234, 234);")
 
-        self.gridLayout_5.addWidget(self.label_43, 2, 0, 1, 1)
-
-        self.lineEdit_3 = QLineEdit(self.tab_2)
-        self.lineEdit_3.setObjectName(u"lineEdit_3")
-        self.lineEdit_3.setStyleSheet(u"background-color: rgb(234, 234, 234);")
-
-        self.gridLayout_5.addWidget(self.lineEdit_3, 2, 1, 1, 1)
+        self.gridLayout_5.addWidget(self.csmd_le_cap, 0, 2, 1, 1)
 
         self.label_42 = QLabel(self.tab_2)
         self.label_42.setObjectName(u"label_42")
 
         self.gridLayout_5.addWidget(self.label_42, 1, 0, 1, 1)
 
+        self.lineEdit_c_smd_maxval = QLineEdit(self.tab_2)
+        self.lineEdit_c_smd_maxval.setObjectName(u"lineEdit_c_smd_maxval")
+        self.lineEdit_c_smd_maxval.setStyleSheet(u"background-color: rgb(234, 234, 234);")
+
+        self.gridLayout_5.addWidget(self.lineEdit_c_smd_maxval, 2, 2, 1, 1)
+
+        self.lineEdit_c_smd_minval = QLineEdit(self.tab_2)
+        self.lineEdit_c_smd_minval.setObjectName(u"lineEdit_c_smd_minval")
+        self.lineEdit_c_smd_minval.setStyleSheet(u"background-color: rgb(234, 234, 234);")
+
+        self.gridLayout_5.addWidget(self.lineEdit_c_smd_minval, 1, 2, 1, 1)
+
+        self.cmb_csmb_cap = QComboBox(self.tab_2)
+        self.cmb_csmb_cap.setObjectName(u"cmb_csmb_cap")
+
+        self.gridLayout_5.addWidget(self.cmb_csmb_cap, 0, 3, 1, 1)
+
+        self.label_43 = QLabel(self.tab_2)
+        self.label_43.setObjectName(u"label_43")
+
+        self.gridLayout_5.addWidget(self.label_43, 2, 0, 1, 1)
+
         self.label_41 = QLabel(self.tab_2)
         self.label_41.setObjectName(u"label_41")
 
         self.gridLayout_5.addWidget(self.label_41, 0, 0, 1, 1)
 
-        self.lineEdit_2 = QLineEdit(self.tab_2)
-        self.lineEdit_2.setObjectName(u"lineEdit_2")
-        self.lineEdit_2.setStyleSheet(u"background-color: rgb(234, 234, 234);")
+        self.label_c_smd_min = QLabel(self.tab_2)
+        self.label_c_smd_min.setObjectName(u"label_c_smd_min")
 
-        self.gridLayout_5.addWidget(self.lineEdit_2, 1, 1, 1, 1)
+        self.gridLayout_5.addWidget(self.label_c_smd_min, 1, 1, 1, 1)
 
-        self.csmd_le_cap = QLineEdit(self.tab_2)
-        self.csmd_le_cap.setObjectName(u"csmd_le_cap")
-        self.csmd_le_cap.setStyleSheet(u"background-color: rgb(234, 234, 234);")
+        self.label_c_smd_max = QLabel(self.tab_2)
+        self.label_c_smd_max.setObjectName(u"label_c_smd_max")
 
-        self.gridLayout_5.addWidget(self.csmd_le_cap, 0, 1, 1, 1)
-
-        self.cmb_csmb_cap = QComboBox(self.tab_2)
-        self.cmb_csmb_cap.setObjectName(u"cmb_csmb_cap")
-
-        self.gridLayout_5.addWidget(self.cmb_csmb_cap, 0, 2, 1, 1)
+        self.gridLayout_5.addWidget(self.label_c_smd_max, 2, 1, 1, 1)
 
 
         self.horizontalLayout_9.addLayout(self.gridLayout_5)
@@ -1212,7 +1222,7 @@ class Ui_MainWindow(object):
         self.checkBox_5b.toggled.connect(self.lineEdit_ohm_5b.setEnabled)
         self.checkBox_5b.toggled.connect(self.comboBox_ohm_5b.setEnabled)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(4)
         self.cmb_csmb198_1.setCurrentIndex(-1)
 
 
@@ -1289,11 +1299,13 @@ class Ui_MainWindow(object):
         self.label_46.setText(QCoreApplication.translate("MainWindow", u"EIA-198", None))
         self.csmd_le1.setText("")
         self.csmd_le1.setPlaceholderText(QCoreApplication.translate("MainWindow", u"1", None))
-        self.label_43.setText(QCoreApplication.translate("MainWindow", u"Maximum", None))
         self.label_42.setText(QCoreApplication.translate("MainWindow", u"Minimum", None))
-        self.label_41.setText(QCoreApplication.translate("MainWindow", u"Capacity", None))
         self.cmb_csmb_cap.setCurrentText("")
         self.cmb_csmb_cap.setPlaceholderText("")
+        self.label_43.setText(QCoreApplication.translate("MainWindow", u"Maximum", None))
+        self.label_41.setText(QCoreApplication.translate("MainWindow", u"Capacity", None))
+        self.label_c_smd_min.setText("")
+        self.label_c_smd_max.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"C SMD", None))
         ___qtablewidgetitem = self.tableWidget.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"C-Letter", None));

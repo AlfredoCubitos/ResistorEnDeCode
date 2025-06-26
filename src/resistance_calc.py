@@ -102,8 +102,8 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         self.radioButton_line_under_short.clicked.connect(self.calculate_res_smd)
         self.radioButton_line_under_long.clicked.connect(self.calculate_res_smd)
         self.smd_line_edit.textEdited.connect(self.calculate_res_smd)
+        
         self.csmd_digit1.valueChanged.connect(self.setCapacityValue)
-
         self.csmd_digit2.currentIndexChanged.connect(self.setCapacityValue)
         self.csmd_digit3.currentIndexChanged.connect(self.setCapacityValue)
         self.csmd_digit4.currentIndexChanged.connect(self.setCapacityValue)
@@ -162,6 +162,15 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
                 c = f"{(int(value) * multiplier) / divisor:.9f}"
             else:
                 c = (int(value) * multiplier) / divisor
+                
+            if self.csmd_digit4.isEnabled():
+                data = self.csmd_digit4.currentData()
+                min, max = self.getC_MinMax(c,data)
+                self.label_c_smd_min.setText("- "+data)
+                self.lineEdit_c_smd_minval.setText(str(min))
+                self.label_c_smd_max.setText("+ "+data)
+                self.lineEdit_c_smd_maxval.setText(str(max))
+                
             self.csmd_le_cap.setText(str(c))
 
     def insertCdigits(self):
@@ -172,7 +181,10 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
             0, ["", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
         )
         self.csmd_digit4.insertItems(0, ["B", "C", "D", "E", "J", "K", "M", "Z"])
-
+        digit4data = ["0.1pf","0.25pf","0.5pf","1%","2%","5%","10%","20%","+80/-20%"]
+        for i,d in enumerate(digit4data):
+            self.csmd_digit4.setItemData(i,d)
+            
     def setCapacityValue(self, idx):
         c = ""
         frst = self.csmd_digit1.value()
@@ -181,12 +193,28 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         if len(scnd) == 0:
             scdn = "         "
         c = f"{frst}{scnd}{thrd}"
+        value = c
 
         if self.csmd_digit4.isEnabled():
             c = f"{c}{self.csmd_digit4.currentText()}"
-
+            data = self.csmd_digit4.currentData()
+            min, max = self.getC_MinMax(value,data)
+            self.label_c_smd_min.setText("- "+data)
+            self.lineEdit_c_smd_minval.setText(str(min))
+            self.label_c_smd_max.setText("+ "+data)
+            self.lineEdit_c_smd_maxval.setText(str(max))
+            
+        self.csmd_le_cap.setText(str(value))
         self.csmd_le1.setText(str(c))
         self.calculateCapacity()
+    
+    def getC_MinMax(self,c,data):
+        if data.endswith("pf"):
+            min = float (int(c) - float(data.rstrip("pf")))
+            max = float (int(c) + float(data.rstrip("pf")))
+            
+        
+        return min, max
 
     def setETable(self):
         for i, v in enumerate(gh.E96):  # this line must be first
@@ -245,31 +273,6 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         self.comboBox_2d_4b.setCurrentIndex(int(snd))
         self.comboBox_m_4b.setCurrentIndex(int(mul["idx"]))
 
-    def calculate_5b(self):
-        value = self.lineEdit_resistance_5b.text()
-        value = value.replace(",", ".")
-        if value[0] == "0":
-            return
-        if value.endswith(("k", "K")):
-            r = value.rstrip("kK")
-            r = f"{float(r) * 1000:g}"
-        elif value.endswith(("M")):
-            r = value.rstrip("mM")
-            r = f"{float(r) * 1000000:g}"
-        else:
-            r = value
-
-        mul = gh.get_multiplier(r)
-        print(value, " :: ", r[0], " - ", r[1], " ", mul["idx"])
-
-        # since we need only the digits we can remove the '.'
-        r = r.replace(".", "")
-        print("R ", r)
-
-        self.comboBox_1d_5b.setCurrentIndex(int(r[0]) - 1)
-        self.comboBox_2d_5b.setCurrentIndex(int(r[1]))
-        self.comboBox_3d_5b.setCurrentIndex(int(r[2]))
-        self.comboBox_m_5b.setCurrentIndex(int(mul["idx"]))
 
     def change_band_colors_4b(self):
         idx1 = self.comboBox_1d_4b.currentIndex()

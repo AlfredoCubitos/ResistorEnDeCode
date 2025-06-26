@@ -42,7 +42,7 @@
        <enum>QTabWidget::TabShape::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>4</number>
       </property>
       <property name="documentMode">
        <bool>true</bool>
@@ -1685,15 +1685,8 @@ color: rgb(255, 67, 67);</string>
          <layout class="QHBoxLayout" name="horizontalLayout_9">
           <item>
            <layout class="QGridLayout" name="gridLayout_5">
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_43">
-              <property name="text">
-               <string>Maximum</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QLineEdit" name="lineEdit_3">
+            <item row="0" column="2">
+             <widget class="QLineEdit" name="csmd_le_cap">
               <property name="styleSheet">
                <string notr="true">background-color: rgb(234, 234, 234);</string>
               </property>
@@ -1706,6 +1699,37 @@ color: rgb(255, 67, 67);</string>
               </property>
              </widget>
             </item>
+            <item row="2" column="2">
+             <widget class="QLineEdit" name="lineEdit_c_smd_maxval">
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(234, 234, 234);</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLineEdit" name="lineEdit_c_smd_minval">
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(234, 234, 234);</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QComboBox" name="cmb_csmb_cap">
+              <property name="currentText">
+               <string/>
+              </property>
+              <property name="placeholderText">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_43">
+              <property name="text">
+               <string>Maximum</string>
+              </property>
+             </widget>
+            </item>
             <item row="0" column="0">
              <widget class="QLabel" name="label_41">
               <property name="text">
@@ -1714,25 +1738,15 @@ color: rgb(255, 67, 67);</string>
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QLineEdit" name="lineEdit_2">
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(234, 234, 234);</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QLineEdit" name="csmd_le_cap">
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(234, 234, 234);</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="2">
-             <widget class="QComboBox" name="cmb_csmb_cap">
-              <property name="currentText">
+             <widget class="QLabel" name="label_c_smd_min">
+              <property name="text">
                <string/>
               </property>
-              <property name="placeholderText">
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="label_c_smd_max">
+              <property name="text">
                <string/>
               </property>
              </widget>
