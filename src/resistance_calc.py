@@ -3,6 +3,8 @@ import PySide6.QtGui as Qg
 from PySide6.QtSvgWidgets import QSvgWidget
 import PySide6.QtWidgets as Qw
 import json
+from dataclasses import dataclass
+from typing import Dict, List, Optional, Tuple
 
 import helpers as gh
 import smd_code_parser as smd_parse
@@ -10,749 +12,601 @@ from ui_generated_files.ui_resistance_calc import Ui_MainWindow
 from driver_license import LicenseAgreement
 
 
-class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
-    """Wrapper to handle interactions on the Unit Manager level."""
+@dataclass
+class ResistorConfig:
+    """Configuration for resistor band setup"""
+    bands: int
+    svg_path: str
+    widget_size: Tuple[int, int]
+    color_placeholders: List[str]
 
-    def __init__(self):
-        Qw.QMainWindow.__init__(self)
-        self.setupUi(self)
 
-        icon = Qg.QIcon()
-        icon.addFile(
-            ":/general/resistor_icon.svg", Qc.QSize(), Qg.QIcon.Normal, Qg.QIcon.Off
+@dataclass
+class ResistorValues:
+    """Container for calculated resistor values"""
+    value: float
+    min_value: float
+    max_value: float
+    tolerance: float
+    post_fix: str = ""
+
+
+class SVGManager:
+    """Manages SVG loading and color manipulation"""
+    
+    def __init__(self, parent):
+        self.parent = parent
+        
+    
+    def load_svg(self, path: str) -> bytes:
+        """Load SVG file and cache it"""
+        svg_cache = {}
+        if path not in svg_cache:
+            file = Qc.QFile(path)
+            if not file.open(Qc.QIODevice.ReadOnly):
+                print(f"Error: Unable to read {path}")
+                
+            svg_cache[path] = file.readAll()
+        return svg_cache[path]
+    
+    def apply_colors(self, svg_data: bytes, color_map: Dict[str, str]) -> bytes:
+        """Apply color replacements to SVG data"""
+        for placeholder, color in color_map.items():
+            #svg_data = svg_data.replace(placeholder.encode(), color.encode())
+            svg_data.replace(Qc.QByteArray(placeholder), Qc.QByteArray(color))
+        
+        return svg_data
+
+
+class ResistorBandCalculator:
+    """Handles resistor band calculations"""
+    
+    def __init__(self, json_data: dict):
+        self.json_data = json_data
+    
+    def calculate_resistance(self, digits: List[str], multiplier_idx: int, 
+                           tolerance_idx: int) -> ResistorValues:
+        """Calculate resistance value from band selections"""
+        mantissa = int(''.join(digits))
+        tolerance = self.json_data["tolerance"][tolerance_idx]["value"]
+        
+        # Handle special multiplier cases
+        divisor = multiplier_idx
+        if multiplier_idx == 10:
+            divisor = -2
+        elif multiplier_idx == 11:
+            divisor = -3
+        
+        value, min_value, max_value, post_fix = gh.calculate_values(
+            tolerance, mantissa, divisor
         )
+        
+        return ResistorValues(value, min_value, max_value, tolerance, post_fix)
+    
+    def get_color_map(self, band_indices: List[int], config: ResistorConfig) -> Dict[str, str]:
+        """Generate color mapping for SVG replacement"""
+        colors = self.json_data["colors"]
+        color_map = {}
+        
+        for i, (placeholder, idx) in enumerate(zip(config.color_placeholders, band_indices)):
+            if i < len(config.color_placeholders) - 1:  # Regular color bands
+                color_map[placeholder] = colors[idx]["color"]
+            else:  # Tolerance band (special handling)
+                if idx == 11:  # Blank tolerance
+                    # Make invisible by setting opacity to 0
+                    opacity_key = "opacity:1;mix-blend-mode:normal;vector-effect:none;fill:" + placeholder
+                    color_map[opacity_key] = "opacity:0;mix-blend-mode:normal;vector-effect:none;fill:" + placeholder
+                else:
+                    tid = self.json_data["tolerance"][idx]["color_id"]
+                    color_map[placeholder] = colors[tid]["color"]
+        
+        return color_map
+
+
+class ComboBoxManager:
+    """Manages combo box initialization and data binding"""
+    
+    def __init__(self, json_data: dict):
+        self.json_data = json_data
+    
+    def setup_combo_boxes(self, combo_configs: List[Tuple[Qw.QComboBox, str]]):
+        """Setup multiple combo boxes with their respective data types"""
+        for combo, data_type in combo_configs:
+            self.populate_combo_box(combo, data_type)
+    
+    def populate_combo_box(self, combo: Qw.QComboBox, data_type: str):
+        """Populate a combo box with data of specified type"""
+        data_map = {
+            "digit": self.json_data["digits"],
+            "multiplier": self.json_data["multiplier"],
+            "tolerance": self.json_data["tolerance"],
+            "trc": self.json_data["trc"]
+        }
+        
+        if data_type not in data_map:
+            return
+        
+        data = data_map[data_type]
+        
+        for item in data:
+            if data_type == "digit":
+                combo.addItem(Qg.QIcon(item["icon"]), item["idx"])
+            elif data_type == "multiplier":
+                combo.addItem(Qg.QIcon(item["icon"]), item["text"], item["data"])
+            elif data_type == "tolerance":
+                combo.addItem(Qg.QIcon(item["icon"]), item["text"])
+            elif data_type == "trc":
+                combo.addItem(Qg.QIcon(item["icon"]), str(item["value"]))
+
+
+class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
+    """Main resistance calculator window"""
+    
+    # Configuration for different resistor types
+    RESISTOR_CONFIGS = {
+        '4b': ResistorConfig(4, ":general/resistor_4b.svg", (445, 100), 
+                            ["#400001", "#400002", "#400003", "#400004"]),
+        '5b': ResistorConfig(5, ":general/resistor_5b.svg", (445, 100),
+                            ["#500001", "#500002", "#500003", "#500004", "#500005"]),
+        '6b': ResistorConfig(6, ":general/resistor_6b.svg", (445, 100),
+                            ["#600001", "#600002", "#600003", "#600004", "#600005", "#600006"])
+    }
+    
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+        
+        # Initialize managers
+        self.svg_manager = SVGManager(self)
+        self.combo_manager = None  # Will be initialized after loading JSON
+        self.band_calculator = None  # Will be initialized after loading JSON
+        
+        # Load JSON data first
+        self.load_json_data()
+        
+        # Initialize managers that depend on JSON data
+        self.combo_manager = ComboBoxManager(self.json_data)
+        self.band_calculator = ResistorBandCalculator(self.json_data)
+        
+        # Setup UI components
+        self.setup_window()
+        self.setup_svg_widgets()
+        self.setup_combo_boxes()
+        self.setup_validators()
+        self.setup_connections()
+        self.setup_initial_values()
+        
+        # Initialize displays
+        self.update_all_displays()
+    
+    def load_json_data(self):
+        """Load JSON configuration data"""
+        try:
+            jf = Qc.QFile(":/general/icon_data.json")
+            jf.open(Qc.QIODevice.ReadOnly | Qc.QIODevice.Text)
+            js = jf.readAll()
+            err = Qc.QJsonParseError()
+            icons = Qc.QJsonDocument.fromJson(js, error=err)
+            
+            if err.error != Qc.QJsonParseError.NoError:
+                print(f"JSON Parse Error: {err.errorString()}")
+                
+            self.json_data = icons.object()
+        except Exception as e:
+            print(f"Error loading JSON data: {e}")
+            self.json_data = {}
+    
+    def setup_window(self):
+        """Setup main window properties"""
+        icon = Qg.QIcon()
+        icon.addFile(":/general/resistor_icon.svg", Qc.QSize(), 
+                    Qg.QIcon.Normal, Qg.QIcon.Off)
         self.setWindowIcon(icon)
         self.setWindowTitle("Resistor En or Decode")
-
-        # For the license window
         self.license_window = None
-        self.icons = Qc.QJsonDocument()  # a json document with all data
-        self.json = {}
-
-        # Initialize SVG widgets
-        self.svg_widget_4b = QSvgWidget(":general/resistor_4b.svg", self.tab_4b)
-        self.horizontalLayout_4b_svg.insertWidget(1, self.svg_widget_4b)
-        self.svg_widget_4b.renderer().setAspectRatioMode(Qc.Qt.KeepAspectRatio)
-        self.svg_widget_4b.setFixedSize(Qc.QSize(445, 100))
-
-        self.svg_widget_5b = QSvgWidget(":general/resistor_5b.svg", self.tab_5b)
-        self.horizontalLayout_5b_svg.insertWidget(1, self.svg_widget_5b)
-        self.svg_widget_5b.renderer().setAspectRatioMode(Qc.Qt.KeepAspectRatio)
-        self.svg_widget_5b.setFixedSize(Qc.QSize(445, 100))
-
-        self.svg_widget_6b = QSvgWidget(":general/resistor_6b.svg", self.tab_6b)
-        self.horizontalLayout_6b_svg.insertWidget(1, self.svg_widget_6b)
-        self.svg_widget_6b.renderer().setAspectRatioMode(Qc.Qt.KeepAspectRatio)
-        self.svg_widget_6b.setFixedSize(Qc.QSize(445, 100))
-
-        self.svg_widget_smd = QSvgWidget(self.tab_smd)
-        self.horizontalLayout_smd_svg.insertWidget(1, self.svg_widget_smd)
-        self.svg_widget_smd.renderer().setAspectRatioMode(Qc.Qt.KeepAspectRatio)
-        self.svg_widget_smd.setFixedSize(Qc.QSize(300, 126))
-        # Add the lineEdit over the smd preview
-        self.smd_line_edit = Qw.QLineEdit(self.svg_widget_smd)
+    
+    def setup_svg_widgets(self):
+        """Setup SVG widgets for all resistor types"""
+        self.svg_widgets = {}
+        
+        for resistor_type, config in self.RESISTOR_CONFIGS.items():
+            # Create SVG widget
+            svg_widget = QSvgWidget(config.svg_path, getattr(self, f'tab_{resistor_type}'))
+            svg_widget.renderer().setAspectRatioMode(Qc.Qt.KeepAspectRatio)
+            svg_widget.setFixedSize(Qc.QSize(*config.widget_size))
+            
+            # Add to layout
+            layout = getattr(self, f'horizontalLayout_{resistor_type}_svg')
+            layout.insertWidget(1, svg_widget)
+            
+            self.svg_widgets[resistor_type] = svg_widget
+        
+        # Setup SMD widget separately (has different requirements)
+        self.setup_smd_widget()
+    
+    def setup_smd_widget(self):
+        """Setup SMD resistor widget with text overlay"""
+        self.svg_widgets['smd'] = QSvgWidget(self.tab_smd)
+        self.horizontalLayout_smd_svg.insertWidget(1, self.svg_widgets['smd'])
+        self.svg_widgets['smd'].renderer().setAspectRatioMode(Qc.Qt.KeepAspectRatio)
+        self.svg_widgets['smd'].setFixedSize(Qc.QSize(300, 126))
+        
+        # Setup text overlay
+        self.smd_line_edit = Qw.QLineEdit(self.svg_widgets['smd'])
         self.smd_line_edit.setFixedSize(Qc.QSize(300, 126))
         self.smd_line_edit.setFrame(False)
         self.smd_line_edit.setAlignment(Qg.Qt.AlignHCenter)
-        # Set a simple default smd code
         self.smd_line_edit.setText("102")
-        # Set magic font size appropriate for the hard-coded size
+        self.smd_line_edit.setMaxLength(4)
+        self.smd_line_edit.setStyleSheet("background: transparent; color: white")
+        
+        # Setup font
         smd_font = Qg.QFont()
         smd_font.setPointSize(44)
         self.smd_line_edit.setFont(smd_font)
-        self.smd_line_edit.setMaxLength(4)
-        self.smd_line_edit.setStyleSheet("background: transparent; color: white")
-        # Hide the warning and notice for smd values
+        
+        # Hide warning labels initially
         self.label_code_invalid_icon.hide()
         self.label_code_invalid_label.hide()
         self.label_tolerance_notice.hide()
-
-        self.get_comboBox_data()
-        self.initCombosR()
-
-        # Connect license button slot
-        # self.pushButton_license.clicked.connect(self.open_license)
-        # Connect slots to update the output
-        self.comboBox_1d_4b.currentIndexChanged.connect(self.calculate_res_4b)
-        self.comboBox_2d_4b.currentIndexChanged.connect(self.calculate_res_4b)
-        self.comboBox_m_4b.currentIndexChanged.connect(self.calculate_res_4b)
-        self.comboBox_t_4b.currentIndexChanged.connect(self.calculate_res_4b)
-        self.lineEdit_ohm_4b.editingFinished.connect(self.lineEditingFinished4b)
-
-        self.lineEdit_ohm_4b.cursorPositionChanged.connect(self.validateLineEdit)
-
-        self.comboBox_1d_5b.currentIndexChanged.connect(self.calculate_res_5b)
-        self.comboBox_2d_5b.currentIndexChanged.connect(self.calculate_res_5b)
-        self.comboBox_3d_5b.currentIndexChanged.connect(self.calculate_res_5b)
-        self.comboBox_m_5b.currentIndexChanged.connect(self.calculate_res_5b)
-        self.comboBox_t_5b.currentIndexChanged.connect(self.calculate_res_5b)
-        self.lineEdit_ohm_5b.editingFinished.connect(self.lineEditingFinished5b)
-
-        self.lineEdit_ohm_5b.cursorPositionChanged.connect(self.validateLineEdit)
-
-        self.comboBox_1d_6b.currentIndexChanged.connect(self.calculate_res_6b)
-        self.comboBox_2d_6b.currentIndexChanged.connect(self.calculate_res_6b)
-        self.comboBox_3d_6b.currentIndexChanged.connect(self.calculate_res_6b)
-        self.comboBox_m_6b.currentIndexChanged.connect(self.calculate_res_6b)
-        self.comboBox_t_6b.currentIndexChanged.connect(self.calculate_res_6b)
-        self.comboBox_tcr_6b.currentIndexChanged.connect(self.calculate_res_6b)
-
-        self.radioButton_line_none.clicked.connect(self.calculate_res_smd)
-        self.radioButton_line_top.clicked.connect(self.calculate_res_smd)
-        self.radioButton_line_under_short.clicked.connect(self.calculate_res_smd)
-        self.radioButton_line_under_long.clicked.connect(self.calculate_res_smd)
-        self.smd_line_edit.textEdited.connect(self.calculate_res_smd)
+    
+    def setup_combo_boxes(self):
+        """Setup all combo boxes with their respective data"""
+        # Define combo box configurations
+        combo_configs = [
+            # 4-band resistor
+            (self.comboBox_1d_4b, "digit"),
+            (self.comboBox_2d_4b, "digit"),
+            (self.comboBox_m_4b, "multiplier"),
+            (self.comboBox_t_4b, "tolerance"),
+            
+            # 5-band resistor
+            (self.comboBox_1d_5b, "digit"),
+            (self.comboBox_2d_5b, "digit"),
+            (self.comboBox_3d_5b, "digit"),
+            (self.comboBox_m_5b, "multiplier"),
+            (self.comboBox_t_5b, "tolerance"),
+            
+            # 6-band resistor
+            (self.comboBox_1d_6b, "digit"),
+            (self.comboBox_2d_6b, "digit"),
+            (self.comboBox_3d_6b, "digit"),
+            (self.comboBox_m_6b, "multiplier"),
+            (self.comboBox_t_6b, "tolerance"),
+            (self.comboBox_tcr_6b, "trc"),
+        ]
         
-        self.csmd_digit1.valueChanged.connect(self.setCapacityValue)
-        self.csmd_digit2.currentIndexChanged.connect(self.setCapacityValue)
-        self.csmd_digit3.currentIndexChanged.connect(self.setCapacityValue)
-        self.csmd_digit4.currentIndexChanged.connect(self.setCapacityValue)
-        self.rB_csmd.checkStateChanged.connect(self.setCapacityValue)
-        self.cmb_csmb_cap.currentIndexChanged.connect(self.calculateCapacity)
-
-        file = Qc.QFile(":general/capacitor_smd.svg")
-        if not file.open(Qc.QIODevice.ReadOnly):
-            print("Error: Unable to read capacitor_smd.svg")
-        self.svg_data_smd_c = file.readAll()
-
+        self.combo_manager.setup_combo_boxes(combo_configs)
+        
+        # Setup unit combo boxes
+        self.setup_unit_combo_boxes()
+    
+    def setup_unit_combo_boxes(self):
+        """Setup unit selection combo boxes"""
+        units = ["mΩ", "Ω", "kΩ", "MΩ"]
+        unit_data = [-3, 0, 3, 6]
+        
+        for combo in [self.comboBox_ohm_4b, self.comboBox_ohm_5b]:
+            combo.addItems(units)
+            for i, data in enumerate(unit_data):
+                combo.setItemData(i, data)
+    
+    def setup_validators(self):
+        """Setup input validators for line edits"""
+        validator = Qg.QDoubleValidator()
+        validator.setNotation(Qg.QDoubleValidator.StandardNotation)
+        validator.setDecimals(2)
+        validator.setLocale(Qc.QLocale.c())
+        
+        for line_edit in [self.lineEdit_ohm_4b, self.lineEdit_ohm_5b]:
+            line_edit.setValidator(validator)
+    
+    def setup_connections(self):
+        """Setup signal-slot connections"""
+        # 4-band connections
+        self.connect_resistor_signals('4b', [
+            self.comboBox_1d_4b, self.comboBox_2d_4b, 
+            self.comboBox_m_4b, self.comboBox_t_4b
+        ])
+        
+        # 5-band connections
+        self.connect_resistor_signals('5b', [
+            self.comboBox_1d_5b, self.comboBox_2d_5b, self.comboBox_3d_5b,
+            self.comboBox_m_5b, self.comboBox_t_5b
+        ])
+        
+        # 6-band connections
+        self.connect_resistor_signals('6b', [
+            self.comboBox_1d_6b, self.comboBox_2d_6b, self.comboBox_3d_6b,
+            self.comboBox_m_6b, self.comboBox_t_6b, self.comboBox_tcr_6b
+        ])
+        
+        # SMD connections
+        self.connect_smd_signals()
+        
+        # Line edit connections
+        self.lineEdit_ohm_4b.editingFinished.connect(self.on_line_edit_finished_4b)
+        self.lineEdit_ohm_5b.editingFinished.connect(self.on_line_edit_finished_5b)
+        self.lineEdit_ohm_4b.cursorPositionChanged.connect(self.validate_line_edit)
+        self.lineEdit_ohm_5b.cursorPositionChanged.connect(self.validate_line_edit)
+    
+    def connect_resistor_signals(self, resistor_type: str, combo_boxes: List[Qw.QComboBox]):
+        """Connect signals for a specific resistor type"""
+        callback = getattr(self, f'calculate_resistance_{resistor_type}')
+        for combo in combo_boxes:
+            combo.currentIndexChanged.connect(callback)
+    
+    def connect_smd_signals(self):
+        """Connect SMD resistor signals"""
+        smd_controls = [
+            self.radioButton_line_none,
+            self.radioButton_line_top,
+            self.radioButton_line_under_short,
+            self.radioButton_line_under_long
+        ]
+        
+        for control in smd_controls:
+            control.clicked.connect(self.calculate_resistance_smd)
+        
+        self.smd_line_edit.textEdited.connect(self.calculate_resistance_smd)
+    
+    def setup_initial_values(self):
+        """Setup initial values for combo boxes"""
+        # Set meaningful defaults
         self.comboBox_1d_4b.setCurrentIndex(1)
         self.comboBox_1d_5b.setCurrentIndex(1)
-        # Set the default tolerance to the most common band, gold
-        self.comboBox_t_4b.setCurrentIndex(8)
-        self.comboBox_t_5b.setCurrentIndex(8)
-        self.comboBox_t_6b.setCurrentIndex(8)
-        # Set the default divisor to 1
-        self.comboBox_m_4b.setCurrentIndex(0)
-        self.comboBox_m_5b.setCurrentIndex(0)
-        self.comboBox_m_6b.setCurrentIndex(0)
-
-        self.change_band_colors_4b()
-
-        # Fill initial state in outputs
-        self.calculate_res_4b()
-        self.calculate_res_5b()
-        self.calculate_res_6b()
-        self.calculate_res_smd()
-        self.setETable()
-        self.setCapacities()
-        self.insertCdigits()
-
-    def calculateCapacity(self):
-        value = self.csmd_le1.text()
-        f = self.cmb_csmb_cap.currentText()
-        idx = self.cmb_csmb_cap.currentIndex()
-        divisor = gh.CAPACITY[idx][1]
-        m = self.csmd_digit3.currentText()
-        if len(m) > 0:
-            multiplier = 10 ** int(m)
-        else:
-            multiplier = 1
-
-        if self.csmd_digit2 == "R":
-            value = value.replace("R", ".")
-        else:
-            value = value[:2]
-
-        print(value[:2])
-
-        if len(value) > 0 and len(self.csmd_digit2.currentText()) > 0:
-            if divisor == 1000000 and multiplier < 10**3:
-                c = f"{(int(value) * multiplier) / divisor:.6f}"
-            elif divisor == 1000000000 and multiplier < 10**4:
-                c = f"{(int(value) * multiplier) / divisor:.9f}"
-            else:
-                c = (int(value) * multiplier) / divisor
-                
-            if self.csmd_digit4.isEnabled():
-                data = self.csmd_digit4.currentData()
-                min, max = self.getC_MinMax(c,data)
-                self.label_c_smd_min.setText("- "+data)
-                self.lineEdit_c_smd_minval.setText(str(min))
-                self.label_c_smd_max.setText("+ "+data)
-                self.lineEdit_c_smd_maxval.setText(str(max))
-                
-            self.csmd_le_cap.setText(str(c))
-
-    def insertCdigits(self):
-        self.csmd_digit2.insertItems(
-            0, ["", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "R"]
-        )
-        self.csmd_digit3.insertItems(
-            0, ["", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-        )
-        self.csmd_digit4.insertItems(0, ["B", "C", "D", "E", "J", "K", "M", "Z"])
-        digit4data = ["0.1pf","0.25pf","0.5pf","1%","2%","5%","10%","20%","+80/-20%"]
-        for i,d in enumerate(digit4data):
-            self.csmd_digit4.setItemData(i,d)
-            
-    def setCapacityValue(self, idx):
-        c = ""
-        frst = self.csmd_digit1.value()
-        scnd = self.csmd_digit2.currentText()
-        thrd = self.csmd_digit3.currentText()
-        if len(scnd) == 0:
-            scdn = "         "
-        c = f"{frst}{scnd}{thrd}"
-        value = c
-
-        if self.csmd_digit4.isEnabled():
-            c = f"{c}{self.csmd_digit4.currentText()}"
-            data = self.csmd_digit4.currentData()
-            min, max = self.getC_MinMax(value,data)
-            self.label_c_smd_min.setText("- "+data)
-            self.lineEdit_c_smd_minval.setText(str(min))
-            self.label_c_smd_max.setText("+ "+data)
-            self.lineEdit_c_smd_maxval.setText(str(max))
-            
-        self.csmd_le_cap.setText(str(value))
-        self.csmd_le1.setText(str(c))
-        self.calculateCapacity()
+        
+        # Set tolerance to gold (most common)
+        for combo in [self.comboBox_t_4b, self.comboBox_t_5b, self.comboBox_t_6b]:
+            combo.setCurrentIndex(8)
+        
+        # Set multiplier to 1 (index 3 typically)
+        for combo in [self.comboBox_m_4b, self.comboBox_m_5b, self.comboBox_m_6b]:
+            combo.setCurrentIndex(3)
     
-    def getC_MinMax(self,c,data):
-        if data.endswith("pf"):
-            min = float (int(c) - float(data.rstrip("pf")))
-            max = float (int(c) + float(data.rstrip("pf")))
-            
+    def calculate_resistance_4b(self):
+        """Calculate 4-band resistance"""
+        digits = [
+            self.comboBox_1d_4b.currentText(),
+            self.comboBox_2d_4b.currentText()
+        ]
+        multiplier_idx = self.comboBox_m_4b.currentIndex()
+        tolerance_idx = self.comboBox_t_4b.currentIndex()
         
-        return min, max
-
-    def setETable(self):
-        for i, v in enumerate(gh.E96):  # this line must be first
-            itm = Qw.QTableWidgetItem(str(v))
-            itm.setTextAlignment(Qc.Qt.AlignHCenter)
-            self.tableWidget.insertRow(i)
-            self.tableWidget.setItem(i, 3, itm)
-        for i, v in enumerate(gh.E48):
-            itm = Qw.QTableWidgetItem(str(v))
-            itm.setTextAlignment(Qc.Qt.AlignHCenter)
-            self.tableWidget.setItem(i, 2, itm)
-        for i, v in enumerate(gh.E24):
-            itm = Qw.QTableWidgetItem(str(v))
-            itm.setTextAlignment(Qc.Qt.AlignHCenter)
-            self.tableWidget.setItem(i, 1, itm)
-        for i, v in enumerate(gh.LE24):
-            itm = Qw.QTableWidgetItem(str(v))
-            itm.setTextAlignment(Qc.Qt.AlignHCenter)
-            self.tableWidget.setItem(i, 0, itm)
-        for i, v in enumerate(gh.EIA198v):
-            itm = Qw.QTableWidgetItem(str(v))
-            itm.setTextAlignment(Qc.Qt.AlignHCenter)
-            self.tableWidget.setItem(i, 5, itm)
-        for i, v in enumerate(gh.EIA198):
-            itm = Qw.QTableWidgetItem(str(v))
-            itm.setTextAlignment(Qc.Qt.AlignHCenter)
-            self.tableWidget.setItem(i, 4, itm)
-
-    def setCapacities(self):
-        for v in gh.CAPACITY:
-            self.cmb_csmb_cap.addItem(v[0])
-
-    def calculate_4b(self):
-        value = self.lineEdit_resistance_4b.text()
-        value = value.replace(",", ".")
-        if value[0] == "0":
-            return
-        if value.endswith(("k", "K")):
-            r = value.rstrip("kK")
-            r = f"{float(r) * 1000:g}"
-        elif value.endswith(("M")):
-            r = value.rstrip("mM")
-            r = f"{float(r) * 1000000:g}"
-        else:
-            r = value
-
-        mul = gh.get_multiplier(r)
-        # print(value, " :: ", r[0], " - ", r[1], " ", mul["idx"])
-
-        if r[1] == ".":
-            snd = r[2]
-        else:
-            snd = r[1]
-
-        self.comboBox_1d_4b.setCurrentIndex(int(r[0]) - 1)
-        self.comboBox_2d_4b.setCurrentIndex(int(snd))
-        self.comboBox_m_4b.setCurrentIndex(int(mul["idx"]))
-
-
-    def change_band_colors_4b(self):
-        idx1 = self.comboBox_1d_4b.currentIndex()
-        idx2 = self.comboBox_2d_4b.currentIndex()
-        idm = self.comboBox_m_4b.currentIndex()
-        idt = self.comboBox_t_4b.currentIndex()
-
-        colors = self.json["colors"]
-        tid = self.json["tolerance"][idt]["color_id"]
-        # print(idx2, " : ", bytes(colors[idx2]["color"], "utf-8"))
-        file = Qc.QFile(":general/resistor_4b.svg")
-        if not file.open(Qc.QIODevice.ReadOnly):
-            print("Error: Unable to read resistor_4b.svg")
-        svg_data_4b = file.readAll()
-        # Hot patch SVG file
-
-        svg_data_4b.replace(b"#400001", bytes(colors[idx1]["color"], "utf-8")).replace(
-            b"#400002", bytes(colors[idx2]["color"], "utf-8")
-        ).replace(b"#400003", bytes(colors[idm]["color"], "utf-8"))
-
-        if (
-            idt == 11
-        ):  # Make 4th band invisible if blank selected, otherwise apply color transform.
-            svg_data_4b.replace(
-                b"opacity:1;mix-blend-mode:normal;vector-effect:none;fill:#400004;",
-                b"opacity:0;mix-blend-mode:normal;vector-effect:none;fill:#400004;",
-            )
-        else:
-            svg_data_4b.replace(b"#400004", bytes(colors[tid]["color"], "utf-8"))
-
-        self.svg_widget_4b.load(svg_data_4b)
-
-        # change_band_colors_4b
-
-    def change_band_colors_5b(self):
-        idx1 = self.comboBox_1d_5b.currentIndex()
-        idx2 = self.comboBox_2d_5b.currentIndex()
-        idx3 = self.comboBox_3d_5b.currentIndex()
-        idm = self.comboBox_m_5b.currentIndex()
-        idt = self.comboBox_t_5b.currentIndex()
-        colors = self.json["colors"]
-
-        tid = self.json["tolerance"][idt]["color_id"]
-
-        file = Qc.QFile(":general/resistor_5b.svg")
-        if not file.open(Qc.QIODevice.ReadOnly):
-            print("Error: Unable to read resistor_5b.svg")
-        svg_data = file.readAll()
-        # Hot patch SVG file
-        svg_data.replace(b"#500001", bytes(colors[idx1]["color"], "utf-8")).replace(
-            b"#500002", bytes(colors[idx2]["color"], "utf-8")
-        ).replace(b"#500003", bytes(colors[idx3]["color"], "utf-8")).replace(
-            b"#500004", bytes(colors[idm]["color"], "utf-8")
-        ).replace(b"#500005", bytes(colors[tid]["color"], "utf-8"))
-        # Update SVG
-        self.svg_widget_5b.load(svg_data)
-        # change_band_colors_5b
-
-    def change_band_colors_6b(self):
-        idx1 = self.comboBox_1d_6b.currentIndex()
-        idx2 = self.comboBox_2d_6b.currentIndex()
-        idx3 = self.comboBox_3d_6b.currentIndex()
-        idm = self.comboBox_m_6b.currentIndex()
-        idt = self.comboBox_t_6b.currentIndex()
-        idc = self.comboBox_tcr_6b.currentIndex()
-
-        colors = self.json["colors"]
-        tid = self.json["tolerance"][idt]["color_id"]
-
-        file = Qc.QFile(":general/resistor_6b.svg")
-        if not file.open(Qc.QIODevice.ReadOnly):
-            print("Error: Unable to read resistor_6b.svg")
-        svg_data = file.readAll()
-        # Hot patch SVG file
-        svg_data.replace(b"#600001", bytes(colors[idx1]["color"], "utf-8")).replace(
-            b"#600002", bytes(colors[idx2]["color"], "utf-8")
-        ).replace(b"#600003", bytes(colors[idx3]["color"], "utf-8")).replace(
-            b"#600004", bytes(colors[idm]["color"], "utf-8")
-        ).replace(b"#600005", bytes(colors[tid]["color"], "utf-8")).replace(
-            b"#600006", bytes(colors[idc]["color"], "utf-8")
+        values = self.band_calculator.calculate_resistance(
+            digits, multiplier_idx, tolerance_idx
         )
-
-        # Update SVG
-        self.svg_widget_6b.load(svg_data)
-        # change_band_colors_6b
-
-    def change_band_colors_smd(self):
-        line_under_short = self.radioButton_line_under_short.isChecked()
-        line_under_long = self.radioButton_line_under_long.isChecked()
-        line_top = self.radioButton_line_top.isChecked()
-
-        file = Qc.QFile(":general/resistor_smd.svg")
-        if not file.open(Qc.QIODevice.ReadOnly):
-            print("Error: Unable to read resistor_smd.svg")
-        svg_data = file.readAll()
-
-        def color_assignment(show):
-            if show:
-                return b"#FFFFFF"
-            else:
-                return b"#000000"
-
-        def opacity_assignment(show):
-            # Used to make the long bar transparent or opaque, since it overlaps the short bar.
-            if show:
-                return b"stroke-opacity:1"
-            else:
-                return b"stroke-opacity:0"
-
-        # Hot patch SVG file by replacing these placeholder colors.
-        svg_data.replace(b"#996601", color_assignment(line_under_short)).replace(
-            b"#996602", color_assignment(line_under_long)
-        ).replace(b"#996603", color_assignment(line_top)).replace(
-            b"stroke-opacity:0.28", opacity_assignment(line_under_long)
-        )
-
-        # Update SVG
-        self.svg_widget_smd.load(svg_data)
-        # change_band_colors_smd
-
-    def calculate_res_4b(self):
-        self.change_band_colors_4b()  # Update svg
-        digit1 = self.comboBox_1d_4b.currentText()
-        digit2 = self.comboBox_2d_4b.currentText()
-        divisor = self.comboBox_m_4b.currentIndex()
-
-        tolid = self.comboBox_t_4b.currentIndex()
-        tolerance = self.json["tolerance"][tolid]["value"]
-        mantissa = int(digit1 + digit2)
         
-        if divisor == 10:
-            divisor = -2
-        if divisor == 11:
-            divisor = -3
-
-        value, min_value, max_value, post_fix = gh.calculate_values(
-            tolerance, mantissa, divisor
-        )
-
-        self.lineEdit_resistance_4b.setText(f"{value}")
-        self.label_resistance_4b.setText(f"{post_fix}")
-        self.lineEdit_resistance_min_4b.setText(str(min_value))
-        self.lineEdit_resistance_max_4b.setText(str(max_value))
-        self.lineEdit_ohm_4b.setText(f"{value}")
-        self.label_t_min_4b.setText(f"- {tolerance}%")
-        self.label_t_max_4b.setText(f"+ {tolerance}%")
-
-        self.comboBox_ohm_4b.setCurrentIndex(
-            self.comboBox_ohm_4b.findText(post_fix, Qc.Qt.MatchFixedString)
-        )
-
-        return value, min_value, max_value
-        # calculate_res_4b
-
-    def validateLineEdit(self):
-        valid = self.sender().hasAcceptableInput()
-        # valid = self.lineEdit_ohm_4b.hasAcceptableInput()
-        # valid = self.lineEdit_ohm_4b.hasAcceptableInput()
-        if valid:
-            ss = "background-color: #aaff85"
-        else:
-            ss = "background-color: #ff8088"
-
-        self.sender().setStyleSheet(ss)
-
-    def lineEditingFinished4b(self):
-        value = float(self.lineEdit_ohm_4b.text())
-        multi = self.comboBox_ohm_4b.currentData()
-        ohm = int(value**multi)
-        digits = str(ohm)
-        if len(digits) > 1:
-            digit2 = digits[1]
-        elif int(digits[0]) < 1:
-            return
-        else:
-            digit2 = ""
-
-        multiplier = int(ohm) / int(digits[0] + digit2)
-
-        self.comboBox_1d_4b.currentIndexChanged.disconnect()
-        self.comboBox_2d_4b.currentIndexChanged.disconnect()
-        # self.comboBox_m_4b.currentIndexChanged.disconnect()
-
-        self.comboBox_1d_4b.setCurrentIndex(int(digits[0]))
-
-        print(
-            digits[0],
-            " ",
-            digits[1],
-            " ",
-            ohm,
-            " ",
-            multiplier,
-            " ",
-            self.comboBox_m_4b.findData(
-                str(int(multiplier)), flags=Qc.Qt.MatchFlag.MatchFixedString
-            ),
-        )
-
-        if len(digits) > 1:
-            self.comboBox_2d_4b.setCurrentIndex(int(digits[1]))
-        idx = self.comboBox_m_4b.findData(
-            str(int(multiplier)), flags=Qc.Qt.MatchFlag.MatchFixedString
-        )
-        self.comboBox_m_4b.setCurrentIndex(idx - 1)
-
-        # self.calculate_4b()
-        self.comboBox_1d_4b.currentIndexChanged.connect(self.calculate_res_4b)
-        self.comboBox_2d_4b.currentIndexChanged.connect(self.calculate_res_4b)
-        # self.comboBox_m_4b.currentIndexChanged.connect(self.calculate_res_4b)
-
-    def lineEditingFinished5b(self):
-        value = float(self.lineEdit_ohm_5b.text())
-        multi = self.comboBox_ohm_5b.currentData()
-        milli = False
-        if multi == -3:
-            ohm = int(value*10**3)/1000
-            milli = True
-        else:
-            ohm = int(value*10**multi)
-        digits = str(ohm)
-
-        multiplier = self.calc_multiplier(5, digits, self.label_ohm_error_5b)
-
-        self.comboBox_1d_5b.currentIndexChanged.disconnect()
-        self.comboBox_2d_5b.currentIndexChanged.disconnect()
-        self.comboBox_3d_5b.currentIndexChanged.disconnect()
-        #self.comboBox_m_5b.currentIndexChanged.disconnect()
+        self.update_resistance_display('4b', values)
+        self.update_svg_colors('4b')
         
-        self.comboBox_1d_5b.setCurrentIndex(int(digits[0]))
-
-        print(
-            value,
-            " ",
-            ohm,
-            " ",
-            int(multiplier),
-            " ",
-            self.comboBox_m_5b.findText(
-                str(int(multiplier))+" mΩ", flags=Qc.Qt.MatchFlag.MatchExactly
-            ),
-        )
-
-        if len(digits) > 1:
-            self.comboBox_2d_5b.setCurrentIndex(int(digits[1]))
-            self.comboBox_3d_5b.setCurrentIndex(int(digits[2]))
-        if milli:
-            idx = self.comboBox_m_5b.findText(
-                str(int(multiplier))+" mΩ", flags=Qc.Qt.MatchFlag.MatchExactly
-            )
-        else:
-            idx = self.comboBox_m_5b.findData(
-                str(int(multiplier)), flags=Qc.Qt.MatchFlag.MatchFixedString
-            )
-        self.comboBox_m_5b.setCurrentIndex(idx )
-
+        return values.value, values.min_value, values.max_value
+    
+    def calculate_resistance_5b(self):
+        """Calculate 5-band resistance"""
+        digits = [
+            self.comboBox_1d_5b.currentText(),
+            self.comboBox_2d_5b.currentText(),
+            self.comboBox_3d_5b.currentText()
+        ]
+        multiplier_idx = self.comboBox_m_5b.currentIndex()
+        tolerance_idx = self.comboBox_t_5b.currentIndex()
         
-        self.comboBox_1d_5b.currentIndexChanged.connect(self.calculate_res_5b)
-        self.comboBox_2d_5b.currentIndexChanged.connect(self.calculate_res_5b)
-        self.comboBox_3d_5b.currentIndexChanged.connect(self.calculate_res_5b)
-        #self.comboBox_m_5b.currentIndexChanged.connect(self.calculate_res_5b)
-
-    def initValidator(self, line):
-        edit = Qg.QDoubleValidator()
-        edit.setNotation(Qg.QDoubleValidator.StandardNotation)
-        edit.setDecimals(2)
-        edit.setLocale(Qc.QLocale.c())
-        line.setValidator(edit)
-
-    def calculate_res_5b(self):
-        self.change_band_colors_5b()  # Update svg
-        digit1 = self.comboBox_1d_5b.currentText()
-        digit2 = self.comboBox_2d_5b.currentText()
-        digit3 = self.comboBox_3d_5b.currentText()
-        divisor = self.comboBox_m_5b.currentIndex()
-        tolid = self.comboBox_t_5b.currentIndex()
-        tolerance = self.json["tolerance"][tolid]["value"]
-        mantissa = int(digit1 + digit2 + digit3)
+        values = self.band_calculator.calculate_resistance(
+            digits, multiplier_idx, tolerance_idx
+        )
         
-        if divisor == 10:
-            divisor = -2
-        if divisor == 11:
-            divisor = -3
-            
-        value, min_value, max_value, post_fix = gh.calculate_values(
-            tolerance, mantissa, divisor
+        self.update_resistance_display('5b', values)
+        self.update_svg_colors('5b')
+        
+        return values.value, values.min_value, values.max_value
+    
+    def calculate_resistance_6b(self):
+        """Calculate 6-band resistance"""
+        digits = [
+            self.comboBox_1d_6b.currentText(),
+            self.comboBox_2d_6b.currentText(),
+            self.comboBox_3d_6b.currentText()
+        ]
+        multiplier_idx = self.comboBox_m_6b.currentIndex()
+        tolerance_idx = self.comboBox_t_6b.currentIndex()
+        
+        values = self.band_calculator.calculate_resistance(
+            digits, multiplier_idx, tolerance_idx
         )
-        # r, attr = gh.edit_format_resistance(value, 3)
-        self.lineEdit_resistance_5b.setText(f"{value}")
-        self.label_resistance_5b.setText(f"{post_fix}")
-        self.lineEdit_resistance_min_5b.setText(str(min_value))
-        self.lineEdit_resistance_max_5b.setText(str(max_value))
-        self.lineEdit_ohm_5b.setText(f"{value}")
-        self.label_min_5b.setText(f"- {tolerance}%")
-        self.label_max_5b.setText(f"+ {tolerance}%")
-
-        self.comboBox_ohm_5b.setCurrentIndex(
-            self.comboBox_ohm_5b.findText(post_fix, Qc.Qt.MatchFixedString)
-        )
-
-        return value, min_value, max_value
-        # calculate_res_5b
-
-    ####
-    # calculates a multiplier from Ohm Edit input
-    # @params:
-    #   bands  (4 or 5)
-    #   value ohm value string
-    #   label where to show errors
-    ####
-    def calc_multiplier(self, bands, digits, label):
-        if bands == 5:
-            m = "1"
-            if len(digits) > 3:
-                # end = 3
-                d = digits[2:]
-                m = "1".ljust(len(d), "0")
-
-                # end = len(digits) - 1
-            # div = "".join(digits[0:end])
-
-        # multiplier = int(int(digits) / int(div))
-        # print("M: ", multiplier)
-        # if "." in str(multiplier):
-        #     error = "The value entered is not valid"
-        #
-        #     label.setText(error)
-        #     m = "1".ljust(len(str(strmultiplier)) - 1, "0")
-        #     print(m)
-        # for i in range(len(str(int(multiplier))) - 1):
-        #    m = m + "0"
-        # else:
-        #     m = "1".ljust(len(str(multiplier)) - 1, "0")
-        #     print(m)
-
-        return m
-
-    def calculate_res_6b(self):
-        self.change_band_colors_6b()  # Update svg
-        digit1 = self.comboBox_1d_6b.currentText()
-        digit2 = self.comboBox_2d_6b.currentText()
-        digit3 = self.comboBox_3d_6b.currentText()
-        divisor = self.comboBox_m_6b.currentIndex()
-        tolid = self.comboBox_t_6b.currentIndex()
-        tolerance = self.json["tolerance"][tolid]["value"]
-        tcr = self.json["tolerance"][self.comboBox_tcr_6b.currentIndex()]["value"]
-
-        mantissa = int(digit1 + digit2 + digit3)
-
-        value, min_value, max_value, post_fix = gh.calculate_values(
-            tolerance, mantissa, divisor
-        )
-
-        self.lineEdit_resistance_6b.setText(f"{value} ±{tolerance}")
-        self.lineEdit_resistance_min_6b.setText(str(min_value))
-        self.lineEdit_resistance_max_6b.setText(str(max_value))
-        self.lineEdit_tcr_6b.setText(str(tcr) + " ppm/°C")
-
-        return value, min_value, max_value, tcr
-        # calculate_res_6b
-
-    def calculate_res_smd(self):
-        self.change_band_colors_smd()  # Update svg
+        
+        # Get TCR value
+        tcr = self.json_data["tolerance"][self.comboBox_tcr_6b.currentIndex()]["value"]
+        
+        self.update_resistance_display('6b', values, tcr)
+        self.update_svg_colors('6b')
+        
+        return values.value, values.min_value, values.max_value, tcr
+    
+    def calculate_resistance_smd(self):
+        """Calculate SMD resistance"""
         smd_code = self.smd_line_edit.text()
         line_under_short = self.radioButton_line_under_short.isChecked()
         line_under_long = self.radioButton_line_under_long.isChecked()
-        # Top Line is irrelevant for the calculation and cosmetic only.
-        # line_top = self.radioButton_line_top.isChecked()
-
+        
         decoded = smd_parse.parse_code(smd_code, line_under_short, line_under_long)
-
+        
         if decoded is not None:
             value, tolerance, is_standard_tolerance = decoded
-
             min_value = value * (1 - 0.01 * tolerance)
             max_value = value * (1 + 0.01 * tolerance)
-
+            
             self.lineEdit_resistance_smd.setText(f"{value:.1f} ±{tolerance}%")
             self.lineEdit_resistance_min_smd.setText(f"{min_value:.1f}")
             self.lineEdit_resistance_max_smd.setText(f"{max_value:.1f}")
-
-            # Hide notice if standardized
+            
+            # Hide/show notices
             self.label_tolerance_notice.setHidden(is_standard_tolerance)
-            # Hide warnings
             self.label_code_invalid_icon.hide()
             self.label_code_invalid_label.hide()
-
+            
+            self.update_smd_svg_colors()
+            
             return value, min_value, max_value
         else:
             # Invalid code
-            self.lineEdit_resistance_smd.clear()
-            self.lineEdit_resistance_min_smd.clear()
-            self.lineEdit_resistance_max_smd.clear()
-            # Hide notice
-            self.label_tolerance_notice.hide()
-            # Show warnings
-            self.label_code_invalid_icon.show()
-            self.label_code_invalid_label.show()
-
+            self.clear_smd_display()
+            self.show_smd_error()
             return None, None, None
-        # calculate_res_smd
-
-    def get_comboBox_data(self):
-        err = Qc.QJsonParseError()
-        jf = Qc.QFile(":/general/icon_data.json")
-        jf.open(Qc.QIODevice.ReadOnly | Qc.QIODevice.Text)
-        js = jf.readAll()
-        self.icons = Qc.QJsonDocument.fromJson(js, error=err)
-
-        print(err.errorString())
-
-        self.json = self.icons.object()
-        # print(self.json["digits"])
-
-    def initCombosR(self):
-        self.attachComboRs(1, self.comboBox_1d_4b, "digit")
-        self.attachComboRs(2, self.comboBox_2d_4b, "digit")
-        self.attachComboRs(3, self.comboBox_m_4b, "multiplier")
-        self.attachComboRs(4, self.comboBox_t_4b, "tolerance")
-
-        self.attachComboRs(1, self.comboBox_1d_5b, "digit")
-        self.attachComboRs(2, self.comboBox_2d_5b, "digit")
-        self.attachComboRs(3, self.comboBox_3d_5b, "digit")
-        self.attachComboRs(4, self.comboBox_m_5b, "multiplier")
-        self.attachComboRs(5, self.comboBox_t_5b, "tolerance")
-
-        self.attachComboRs(1, self.comboBox_1d_6b, "digit")
-        self.attachComboRs(2, self.comboBox_2d_6b, "digit")
-        self.attachComboRs(3, self.comboBox_3d_6b, "digit")
-        self.attachComboRs(4, self.comboBox_m_6b, "multiplier")
-        self.attachComboRs(5, self.comboBox_t_6b, "tolerance")
-        self.attachComboRs(6, self.comboBox_tcr_6b, "trc")
-
-        self.comboBox_ohm_4b.addItems(["mΩ", "Ω", "kΩ", "MΩ"])
-        self.comboBox_ohm_4b.setItemData(0, -3)
-        self.comboBox_ohm_4b.setItemData(1, 0)
-        self.comboBox_ohm_4b.setItemData(2, 3)
-        self.comboBox_ohm_4b.setItemData(3, 6)
-        self.comboBox_t_4b.setCurrentIndex(2)
-
-        self.comboBox_ohm_5b.addItems(["mΩ", "Ω", "kΩ", "MΩ"])
-        self.comboBox_ohm_5b.setItemData(0, -3)
-        self.comboBox_ohm_5b.setItemData(1, 0)
-        self.comboBox_ohm_5b.setItemData(2, 3)
-        self.comboBox_ohm_5b.setItemData(3, 6)
-        self.comboBox_t_5b.setCurrentIndex(2)
-
-        self.comboBox_t_6b.setCurrentIndex(1)
-        # Set the default divisor to 1
-        self.comboBox_m_4b.setCurrentIndex(3)
-        self.comboBox_m_5b.setCurrentIndex(3)
-        self.comboBox_m_6b.setCurrentIndex(3)
-
-        self.initValidator(self.lineEdit_ohm_4b)
-        self.initValidator(self.lineEdit_ohm_5b)
-
-    def attachComboRs(self, digit, combobox, typ):
-        data = self.json["digits"]
-        if typ == "digit":
-            for i in range(0, len(data)):
-                ico = data[i]
-                combobox.addItem(Qg.QIcon(ico["icon"]), ico["idx"])
-
-        if typ == "multiplier":
-            data = self.json["multiplier"]
-            for i in range(0, len(data)):
-                ico = data[i]
-                combobox.addItem(Qg.QIcon(ico["icon"]), ico["text"], ico["data"])
-        if typ == "tolerance":
-            data = self.json["tolerance"]
-            for i in range(0, len(data)):
-                ico = data[i]
-                combobox.addItem(Qg.QIcon(ico["icon"]), ico["text"])
-        if typ == "trc":
-            data = self.json["trc"]
-            for i in range(0, len(data)):
-                ico = data[i]
-                combobox.addItem(Qg.QIcon(ico["icon"]), str(ico["value"]))
-
+    
+    def update_resistance_display(self, resistor_type: str, values: ResistorValues, tcr: float = None):
+        """Update resistance display fields"""
+        # Get UI elements
+        resistance_edit = getattr(self, f'lineEdit_resistance_{resistor_type}')
+        min_edit = getattr(self, f'lineEdit_resistance_min_{resistor_type}')
+        max_edit = getattr(self, f'lineEdit_resistance_max_{resistor_type}')
+        
+        # Update values
+        if tcr is not None:  # 6-band has TCR
+            resistance_edit.setText(f"{values.value} ±{values.tolerance}")
+            getattr(self, f'lineEdit_tcr_{resistor_type}').setText(f"{tcr} ppm/°C")
+        else:
+            resistance_edit.setText(f"{values.value}")
+            getattr(self, f'label_resistance_{resistor_type}').setText(f"{values.post_fix}")
+            
+            # Update ohm line edit and combo box
+            ohm_edit = getattr(self, f'lineEdit_ohm_{resistor_type}')
+            ohm_combo = getattr(self, f'comboBox_ohm_{resistor_type}')
+            
+            ohm_edit.setText(f"{values.value}")
+            ohm_combo.setCurrentIndex(ohm_combo.findText(values.post_fix, Qc.Qt.MatchFixedString))
+            
+            # Update tolerance labels
+            getattr(self, f'label_t_min_{resistor_type}', 
+                   getattr(self, f'label_min_{resistor_type}', None)).setText(f"- {values.tolerance}%")
+            getattr(self, f'label_t_max_{resistor_type}', 
+                   getattr(self, f'label_max_{resistor_type}', None)).setText(f"+ {values.tolerance}%")
+        
+        min_edit.setText(str(values.min_value))
+        max_edit.setText(str(values.max_value))
+    
+    def update_svg_colors(self, resistor_type: str):
+        """Update SVG colors for a resistor type"""
+        if resistor_type not in self.RESISTOR_CONFIGS:
+            return
+        
+        config = self.RESISTOR_CONFIGS[resistor_type]
+        
+        # Get current selections
+        band_indices = []
+        
+        # Digit bands - abhängig vom Resistor-Typ
+        if resistor_type == '4b':
+            # 4-Band: nur 2 Ziffern (1d, 2d)
+            band_indices.append(self.comboBox_1d_4b.currentIndex())
+            band_indices.append(self.comboBox_2d_4b.currentIndex())
+            band_indices.append(self.comboBox_m_4b.currentIndex())    # Multiplier
+            band_indices.append(self.comboBox_t_4b.currentIndex())    # Tolerance
+            
+        elif resistor_type == '5b':
+            # 5-Band: 3 Ziffern (1d, 2d, 3d)
+            band_indices.append(self.comboBox_1d_5b.currentIndex())
+            band_indices.append(self.comboBox_2d_5b.currentIndex())
+            band_indices.append(self.comboBox_3d_5b.currentIndex())
+            band_indices.append(self.comboBox_m_5b.currentIndex())    # Multiplier
+            band_indices.append(self.comboBox_t_5b.currentIndex())    # Tolerance
+            
+        elif resistor_type == '6b':
+            # 6-Band: 3 Ziffern + TCR
+            band_indices.append(self.comboBox_1d_6b.currentIndex())
+            band_indices.append(self.comboBox_2d_6b.currentIndex())
+            band_indices.append(self.comboBox_3d_6b.currentIndex())
+            band_indices.append(self.comboBox_m_6b.currentIndex())    # Multiplier
+            band_indices.append(self.comboBox_t_6b.currentIndex())    # Tolerance
+            band_indices.append(self.comboBox_tcr_6b.currentIndex())  # TCR
+        
+        print(f"Band indices for {resistor_type}: {band_indices}")
+        
+        # Generate color map and apply
+        color_map = self.band_calculator.get_color_map(band_indices, config)
+        svg_data = self.svg_manager.load_svg(config.svg_path)
+        colored_svg = self.svg_manager.apply_colors(svg_data, color_map)
+        
+        self.svg_widgets[resistor_type].load(colored_svg)
+    
+    def update_smd_svg_colors(self):
+        """Update SMD SVG colors based on line selections"""
+        line_under_short = self.radioButton_line_under_short.isChecked()
+        line_under_long = self.radioButton_line_under_long.isChecked()
+        line_top = self.radioButton_line_top.isChecked()
+        
+        color_map = {
+            "#996601": "#FFFFFF" if line_under_short else "#000000",
+            "#996602": "#FFFFFF" if line_under_long else "#000000",
+            "#996603": "#FFFFFF" if line_top else "#000000",
+            "stroke-opacity:0.28": "stroke-opacity:1" if line_under_long else "stroke-opacity:0"
+        }
+        
+        svg_data = self.svg_manager.load_svg(":general/resistor_smd.svg")
+        colored_svg = self.svg_manager.apply_colors(svg_data, color_map)
+        self.svg_widgets['smd'].load(colored_svg)
+    
+    def clear_smd_display(self):
+        """Clear SMD display fields"""
+        self.lineEdit_resistance_smd.clear()
+        self.lineEdit_resistance_min_smd.clear()
+        self.lineEdit_resistance_max_smd.clear()
+    
+    def show_smd_error(self):
+        """Show SMD error indicators"""
+        self.label_tolerance_notice.hide()
+        self.label_code_invalid_icon.show()
+        self.label_code_invalid_label.show()
+    
+    def validate_line_edit(self):
+        """Validate line edit input and update styling"""
+        sender = self.sender()
+        valid = sender.hasAcceptableInput()
+        
+        if valid:
+            sender.setStyleSheet("background-color: #aaff85")
+        else:
+            sender.setStyleSheet("background-color: #ff8088")
+    
+    def on_line_edit_finished_4b(self):
+        """Handle 4-band line edit finished"""
+        self.process_line_edit_input('4b')
+    
+    def on_line_edit_finished_5b(self):
+        """Handle 5-band line edit finished"""
+        self.process_line_edit_input('5b')
+    
+    def process_line_edit_input(self, resistor_type: str):
+        """Process line edit input and update combo boxes"""
+        # This would contain the logic to reverse-calculate combo box values
+        # from the entered resistance value
+        # Implementation depends on the specific requirements
+        pass
+    
+    def update_all_displays(self):
+        """Update all resistance displays"""
+        self.calculate_resistance_4b()
+        self.calculate_resistance_5b()
+        self.calculate_resistance_6b()
+        self.calculate_resistance_smd()
+    
     def open_license(self):
+        """Open license agreement window"""
         if self.license_window is None:
             self.license_window = LicenseAgreement()
         self.license_window.show()
+
+
+# Additional utility functions that were in the original code
+# but can be simplified or moved to helper modules
+
+def setup_table_data(table_widget, data_sets):
+    """Helper function to setup table widget data"""
+    for col, data_set in enumerate(data_sets):
+        for row, value in enumerate(data_set):
+            if row >= table_widget.rowCount():
+                table_widget.insertRow(row)
+            
+            item = Qw.QTableWidgetItem(str(value))
+            item.setTextAlignment(Qc.Qt.AlignHCenter)
+            table_widget.setItem(row, col, item)
