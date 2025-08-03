@@ -176,6 +176,8 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         self.setup_connections()
         self.setup_initial_values()
         
+        self.setup_table_data(self.tableWidget,gh.ESeries)
+        
         # Initialize displays
         self.update_all_displays()
     
@@ -597,16 +599,19 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         self.license_window.show()
 
 
-# Additional utility functions that were in the original code
-# but can be simplified or moved to helper modules
+    # Additional utility functions that were in the original code
+    # but can be simplified or moved to helper modules
 
-def setup_table_data(table_widget, data_sets):
-    """Helper function to setup table widget data"""
-    for col, data_set in enumerate(data_sets):
-        for row, value in enumerate(data_set):
-            if row >= table_widget.rowCount():
-                table_widget.insertRow(row)
-            
-            item = Qw.QTableWidgetItem(str(value))
-            item.setTextAlignment(Qc.Qt.AlignHCenter)
-            table_widget.setItem(row, col, item)
+    def setup_table_data(self,table_widget, data_sets):
+        
+        for col, k in enumerate(list(data_sets)):
+            print("col: ",col," val: ",k)
+            table_widget.insertColumn(col)
+            table_widget.setHorizontalHeaderItem(int(col),Qw.QTableWidgetItem(str(k)))
+            for row, value in enumerate(data_sets[k]):
+                if row >= table_widget.rowCount():
+                    table_widget.insertRow(row)
+                
+                item = Qw.QTableWidgetItem(str(value))
+                item.setTextAlignment(Qc.Qt.AlignHCenter)
+                table_widget.setItem(row, col, item)

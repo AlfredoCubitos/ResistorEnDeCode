@@ -42,7 +42,7 @@
        <enum>QTabWidget::TabShape::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>5</number>
       </property>
       <property name="documentMode">
        <bool>true</bool>
@@ -1786,56 +1786,9 @@ color: rgb(255, 67, 67);</string>
           <property name="dragDropOverwriteMode">
            <bool>false</bool>
           </property>
-          <column>
-           <property name="text">
-            <string>C-Letter</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>E24</string>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>14</pointsize>
-            </font>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>E48</string>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>14</pointsize>
-            </font>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>E96</string>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>14</pointsize>
-            </font>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>EIA 198</string>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>14</pointsize>
-            </font>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>EIA</string>
-           </property>
-          </column>
+          <property name="columnCount">
+           <number>0</number>
+          </property>
          </widget>
         </item>
        </layout>

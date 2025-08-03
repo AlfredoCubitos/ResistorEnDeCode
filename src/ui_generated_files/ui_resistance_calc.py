@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'ui_resistance_calcRnRSgD.ui'
+## Form generated from reading UI file 'ui_resistance_calcWGzAYX.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.9.1
 ##
@@ -1060,28 +1060,11 @@ class Ui_MainWindow(object):
         self.verticalLayout_8 = QVBoxLayout(self.tab)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.tableWidget = QTableWidget(self.tab)
-        if (self.tableWidget.columnCount() < 6):
-            self.tableWidget.setColumnCount(6)
-        __qtablewidgetitem = QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(0, __qtablewidgetitem)
-        __qtablewidgetitem1 = QTableWidgetItem()
-        __qtablewidgetitem1.setFont(font);
-        self.tableWidget.setHorizontalHeaderItem(1, __qtablewidgetitem1)
-        __qtablewidgetitem2 = QTableWidgetItem()
-        __qtablewidgetitem2.setFont(font);
-        self.tableWidget.setHorizontalHeaderItem(2, __qtablewidgetitem2)
-        __qtablewidgetitem3 = QTableWidgetItem()
-        __qtablewidgetitem3.setFont(font);
-        self.tableWidget.setHorizontalHeaderItem(3, __qtablewidgetitem3)
-        __qtablewidgetitem4 = QTableWidgetItem()
-        __qtablewidgetitem4.setFont(font);
-        self.tableWidget.setHorizontalHeaderItem(4, __qtablewidgetitem4)
-        __qtablewidgetitem5 = QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(5, __qtablewidgetitem5)
         self.tableWidget.setObjectName(u"tableWidget")
         self.tableWidget.setStyleSheet(u"background-color: rgb(236, 236, 236);")
         self.tableWidget.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.tableWidget.setDragDropOverwriteMode(False)
+        self.tableWidget.setColumnCount(0)
 
         self.verticalLayout_8.addWidget(self.tableWidget)
 
@@ -1222,7 +1205,7 @@ class Ui_MainWindow(object):
         self.checkBox_5b.toggled.connect(self.lineEdit_ohm_5b.setEnabled)
         self.checkBox_5b.toggled.connect(self.comboBox_ohm_5b.setEnabled)
 
-        self.tabWidget.setCurrentIndex(4)
+        self.tabWidget.setCurrentIndex(5)
         self.cmb_csmb198_1.setCurrentIndex(-1)
 
 
@@ -1307,18 +1290,6 @@ class Ui_MainWindow(object):
         self.label_c_smd_min.setText("")
         self.label_c_smd_max.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"C SMD", None))
-        ___qtablewidgetitem = self.tableWidget.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"C-Letter", None));
-        ___qtablewidgetitem1 = self.tableWidget.horizontalHeaderItem(1)
-        ___qtablewidgetitem1.setText(QCoreApplication.translate("MainWindow", u"E24", None));
-        ___qtablewidgetitem2 = self.tableWidget.horizontalHeaderItem(2)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("MainWindow", u"E48", None));
-        ___qtablewidgetitem3 = self.tableWidget.horizontalHeaderItem(3)
-        ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"E96", None));
-        ___qtablewidgetitem4 = self.tableWidget.horizontalHeaderItem(4)
-        ___qtablewidgetitem4.setText(QCoreApplication.translate("MainWindow", u"EIA 198", None));
-        ___qtablewidgetitem5 = self.tableWidget.horizontalHeaderItem(5)
-        ___qtablewidgetitem5.setText(QCoreApplication.translate("MainWindow", u"EIA", None));
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"E-Series", None))
         self.label_32.setText("")
         self.label_16.setText(QCoreApplication.translate("MainWindow", u"ResistorEnDecode", None))
