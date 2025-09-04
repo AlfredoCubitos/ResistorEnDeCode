@@ -21,8 +21,8 @@ from PySide6.QtWidgets import (QAbstractItemView, QApplication, QCheckBox, QComb
     QMainWindow, QPushButton, QRadioButton, QSizePolicy,
     QSpacerItem, QSpinBox, QTabWidget, QTableWidget,
     QTableWidgetItem, QVBoxLayout, QWidget)
-import resource_base_rc
-import resource_base_rc
+import resistorendecode.resource_base_rc
+import resistorendecode.resource_base_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):

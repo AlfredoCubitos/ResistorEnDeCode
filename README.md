@@ -36,9 +36,12 @@ pip install PySide6
 
 ```
 git clone https://github.com/AlfredoCubitos/ResistorEnDeCode
-cd ResistorEnDecode
-python src/main.py
+cd ResistorEnDecode/src
+python -m resistorendecode
 ```
 
 ## Notes
 1. Tolerance values are only standardized for EIA-96 codes and codes with short underlines. Check the manufacturer's datasheet if the tolerance is critical for your application.
+
+## Changes
+On the way to `pip` package, now run the with `python -m resistorendecode`

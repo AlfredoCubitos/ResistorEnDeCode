@@ -6,10 +6,10 @@ import json
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
 
-import helpers as gh
-import smd_code_parser as smd_parse
-from ui_generated_files.ui_resistance_calc import Ui_MainWindow
-from driver_license import LicenseAgreement
+import resistorendecode.helpers as gh
+import resistorendecode.smd_code_parser as smd_parse
+from resistorendecode.ui_generated_files.ui_resistance_calc import Ui_MainWindow
+from .driver_license import LicenseAgreement
 
 
 @dataclass
