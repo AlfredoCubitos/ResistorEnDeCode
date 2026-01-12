@@ -2,8 +2,7 @@
 
 # ResistorEn​Decode
 
-This is a code copy (not a fork) from https://github.com/VoxelCubes/ResistorDecoder.  
-Its a copy because, there are some infrastructure changes made which may not be very compatible with the original code base.
+Inspired by  https://github.com/VoxelCubes/ResistorDecoder.  
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
@@ -25,11 +24,7 @@ With this version you can also encode resistance values.
 - Respects your system's Qt theming.
 
 ## Dependencies
-PySide6
-
-```
-pip install PySide6
-```
+- PySide6
 
 ## Installation
 
@@ -44,4 +39,11 @@ python -m resistorendecode
 1. Tolerance values are only standardized for EIA-96 codes and codes with short underlines. Check the manufacturer's datasheet if the tolerance is critical for your application.
 
 ## Changes
-On the way to `pip` package, now run the with `python -m resistorendecode`
+**Mainly refactored**
+
+
+- 5 \& 6-Band Tabs removed
+- Only one Tab for color band selection
+- Bandselection with a slider
+- Resistor editor shows nearest value in a E-serie (not fully working)
+
