@@ -170,6 +170,8 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         self.band_label = None
         self.band_type = "4b"
         self.svg_widgets = {}
+        self.capdigits = 3
+
         
         # Load JSON data first
         self.load_json_data()
@@ -338,6 +340,18 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         self.pB_48_Min.clicked.connect(partial(self.eButton,self.pB_48_Min))
         self.pB_E96_Min.clicked.connect(partial(self.eButton,self.pB_E96_Min))
 
+        # Capacity EIA Checkbox
+        self.cb_csmd_198.checkStateChanged.connect(self.capacity_eia)
+        # Capacity 4 Digits
+        self.rB_csmd.checkStateChanged.connect(self.capacity_digits)
+        # Capacity
+        self.csmd_digit1.currentIndexChanged.connect(self.capacity_setValue)
+        self.csmd_digit2.currentIndexChanged.connect(self.capacity_setValue)
+        self.csmd_digit3.currentIndexChanged.connect(self.capacity_setValue)
+        self.csmd_digit4.currentIndexChanged.connect(self.capacity_setValue)
+        self.cmb_csmb_cap.currentIndexChanged.connect(self.capacity_setValue)
+
+
     @Slot(QPushButton)
     def eButton(self,button):
         print(button.text())
@@ -372,12 +386,7 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
                self.lineEdit_6b.setEnabled(True)
 
         pass
-    ## TODO: to be deleted
-    #def connect_resistor_signals(self, resistor_type: str, combo_boxes: List[Qw.QComboBox]):
-    #    """Connect signals for a specific resistor type"""
-    #    callback = getattr(self, f'calculate_resistance_{resistor_type}')
-    #    for combo in combo_boxes:
-    #        combo.currentIndexChanged.connect(callback)
+
     
     def connect_smd_signals(self):
         """Connect SMD resistor signals"""
@@ -392,8 +401,55 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
             control.clicked.connect(self.calculate_resistance_smd)
         
         self.smd_line_edit.textEdited.connect(self.calculate_resistance_smd)
-    
-    def setup_initial_values(self):
+
+    @Slot(int)
+    def capacity_eia(self,value):
+        if value == Qt.CheckState.Checked:
+            self.rB_csmd.setCheckState(Qt.CheckState.Unchecked)
+
+    @Slot(int)
+    def capacity_digits(self, value):
+        if value == Qt.CheckState.Checked:
+            self.capdigits = 4
+        else:
+            self.capdigits = 3
+
+    @Slot()
+    def capacity_setValue(self):
+
+        v = self.csmd_digit1.currentText()
+        v = v + self.csmd_digit2.currentText()
+        v = v + self.csmd_digit3.currentText()
+
+        if self.capdigits == 4:
+            v = v + self.csmd_digit4.currentText()
+            l = gh.CAPACITY["tolerance"][self.csmd_digit4.currentText()]
+
+
+        self.csmd_le1.setText(v)
+        if len(v) == 3:
+            self.capacity_calc(v)
+        if len(v) == 4:
+            self.le_c_smd_tolerance.setText(str(l[0]))
+            self.label_c_tolerance.setText(l[1])
+
+
+
+    def capacity_calc(self,value: str)->None:
+
+        z = "." if value[1] == "R" else value[1]
+        v = value[0] + z
+        v = v + "".zfill(int(value[2]))
+        ## get rid of the trailing .0
+        if v.isdigit():
+            v = int(v) // int(gh.CAPACITY[self.cmb_csmb_cap.currentText()])
+        else:
+            v = float(v) / int(gh.CAPACITY[self.cmb_csmb_cap.currentText()])
+        self.csmd_le_cap.setText(str(v))
+
+
+
+    def setup_initial_values(self)->None:
         """Setup initial values for combo boxes"""
         # Set meaningful defaults
         self.comboBox_1d.setCurrentIndex(1)
@@ -525,38 +581,7 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
             self.lineEdit_resistance_min_4b.setText(str(values.min_value))
             self.lineEdit_resistance_max_4b.setText(str(values.max_value))
 
-    ### TODO: to be deleted
-#     def update_resistance_display_(self, resistor_type: str, values: ResistorValues, tcr: float = None):
-#         """Update resistance display fields"""
-#         # Get UI elements
-#         resistance_edit = getattr(self, f'lineEdit_resistance_{resistor_type}')
-#         min_edit = getattr(self, f'lineEdit_resistance_min_{resistor_type}')
-#         max_edit = getattr(self, f'lineEdit_resistance_max_{resistor_type}')
-#
-#         # Update values
-#         if tcr is not None:  # 6-band has TCR
-#             resistance_edit.setText(f"{values.value} ±{values.tolerance}")
-#             getattr(self, f'lineEdit_tcr_{resistor_type}').setText(f"{tcr} ppm/°C")
-#         else:
-#             resistance_edit.setText(f"{values.value}")
-#             getattr(self, f'label_resistance_{resistor_type}').setText(f"{values.post_fix}")
-#
-#             # Update ohm line edit and combo box
-#             ohm_edit = getattr(self, f'lineEdit_ohm_{resistor_type}')
-#             ohm_combo = getattr(self, f'comboBox_ohm_{resistor_type}')
-#
-#             ohm_edit.setText(f"{values.value}")
-#             ohm_combo.setCurrentIndex(ohm_combo.findText(values.post_fix, Qc.Qt.MatchFixedString))
-#
-#             # Update tolerance labels
-#             getattr(self, f'label_t_min_{resistor_type}',
-#                    getattr(self, f'label_min_{resistor_type}', None)).setText(f"- {values.tolerance}%")
-#             getattr(self, f'label_t_max_{resistor_type}',
-#                    getattr(self, f'label_max_{resistor_type}', None)).setText(f"+ {values.tolerance}%")
-#
-#         min_edit.setText(str(values.min_value))
-#         max_edit.setText(str(values.max_value))
-#
+
     def update_svg_colors(self, resistor_type: str):
         """Update SVG colors for a resistor type"""
         if resistor_type not in self.RESISTOR_CONFIGS:

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'ui_resistance_calcZFDaMN.ui'
+## Form generated from reading UI file 'ui_resistance_calcZAtnyj.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.1
 ##
@@ -16,13 +16,12 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QAbstractItemView, QApplication, QCheckBox, QComboBox,
-    QFormLayout, QGridLayout, QGroupBox, QHBoxLayout,
-    QHeaderView, QLabel, QLayout, QLineEdit,
-    QMainWindow, QPushButton, QRadioButton, QSizePolicy,
-    QSlider, QSpacerItem, QSpinBox, QTabWidget,
+    QFormLayout, QFrame, QGridLayout, QGroupBox,
+    QHBoxLayout, QHeaderView, QLabel, QLayout,
+    QLineEdit, QMainWindow, QPushButton, QRadioButton,
+    QSizePolicy, QSlider, QSpacerItem, QTabWidget,
     QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget)
 import resistorendecode.resource_base_rc
-
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -575,24 +574,67 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_11 = QHBoxLayout()
         self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
-        self.csmd_digit1 = QSpinBox(self.tab_2)
+        self.csmd_digit1 = QComboBox(self.tab_2)
+        self.csmd_digit1.addItem("")
+        self.csmd_digit1.addItem("")
+        self.csmd_digit1.addItem("")
+        self.csmd_digit1.addItem("")
+        self.csmd_digit1.addItem("")
+        self.csmd_digit1.addItem("")
+        self.csmd_digit1.addItem("")
+        self.csmd_digit1.addItem("")
+        self.csmd_digit1.addItem("")
+        self.csmd_digit1.addItem(u"9")
         self.csmd_digit1.setObjectName(u"csmd_digit1")
-        self.csmd_digit1.setMinimum(1)
-        self.csmd_digit1.setMaximum(9)
 
         self.horizontalLayout_11.addWidget(self.csmd_digit1)
 
         self.csmd_digit2 = QComboBox(self.tab_2)
+        self.csmd_digit2.addItem("")
+        self.csmd_digit2.addItem("")
+        self.csmd_digit2.addItem("")
+        self.csmd_digit2.addItem("")
+        self.csmd_digit2.addItem("")
+        self.csmd_digit2.addItem("")
+        self.csmd_digit2.addItem("")
+        self.csmd_digit2.addItem("")
+        self.csmd_digit2.addItem("")
+        self.csmd_digit2.addItem("")
+        self.csmd_digit2.addItem("")
         self.csmd_digit2.setObjectName(u"csmd_digit2")
+        self.csmd_digit2.setMaxCount(11)
+        self.csmd_digit2.setMinimumContentsLength(0)
 
         self.horizontalLayout_11.addWidget(self.csmd_digit2)
 
         self.csmd_digit3 = QComboBox(self.tab_2)
+        self.csmd_digit3.addItem("")
+        self.csmd_digit3.addItem("")
+        self.csmd_digit3.addItem("")
+        self.csmd_digit3.addItem("")
+        self.csmd_digit3.addItem("")
+        self.csmd_digit3.addItem("")
+        self.csmd_digit3.addItem("")
+        self.csmd_digit3.addItem("")
+        self.csmd_digit3.addItem("")
+        self.csmd_digit3.addItem("")
+        self.csmd_digit3.addItem("")
         self.csmd_digit3.setObjectName(u"csmd_digit3")
 
         self.horizontalLayout_11.addWidget(self.csmd_digit3)
 
         self.csmd_digit4 = QComboBox(self.tab_2)
+        self.csmd_digit4.addItem("")
+        self.csmd_digit4.addItem("")
+        self.csmd_digit4.addItem("")
+        self.csmd_digit4.addItem("")
+        self.csmd_digit4.addItem("")
+        self.csmd_digit4.addItem("")
+        self.csmd_digit4.addItem("")
+        self.csmd_digit4.addItem("")
+        self.csmd_digit4.addItem("")
+        self.csmd_digit4.addItem("")
+        self.csmd_digit4.addItem("")
         self.csmd_digit4.setObjectName(u"csmd_digit4")
         self.csmd_digit4.setEnabled(False)
 
@@ -632,15 +674,60 @@ class Ui_MainWindow(object):
         self.horizontalLayout_14 = QHBoxLayout()
         self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
         self.cmb_csmb198_1 = QComboBox(self.tab_2)
+        self.cmb_csmb198_1.addItem(u"")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
+        self.cmb_csmb198_1.addItem("")
         self.cmb_csmb198_1.setObjectName(u"cmb_csmb198_1")
-        self.cmb_csmb198_1.setMaxVisibleItems(1)
+        self.cmb_csmb198_1.setEnabled(False)
+        self.cmb_csmb198_1.setCurrentText(u"")
+        self.cmb_csmb198_1.setMaxVisibleItems(33)
 
         self.horizontalLayout_14.addWidget(self.cmb_csmb198_1)
 
-        self.cmb_csmb198_2 = QSpinBox(self.tab_2)
+        self.cmb_csmb198_2 = QComboBox(self.tab_2)
+        self.cmb_csmb198_2.addItem("")
+        self.cmb_csmb198_2.addItem("")
+        self.cmb_csmb198_2.addItem("")
+        self.cmb_csmb198_2.addItem("")
+        self.cmb_csmb198_2.addItem("")
+        self.cmb_csmb198_2.addItem("")
+        self.cmb_csmb198_2.addItem("")
+        self.cmb_csmb198_2.addItem("")
+        self.cmb_csmb198_2.addItem("")
+        self.cmb_csmb198_2.addItem("")
+        self.cmb_csmb198_2.addItem("")
         self.cmb_csmb198_2.setObjectName(u"cmb_csmb198_2")
         self.cmb_csmb198_2.setEnabled(False)
-        self.cmb_csmb198_2.setMaximum(9)
 
         self.horizontalLayout_14.addWidget(self.cmb_csmb198_2)
 
@@ -693,53 +780,84 @@ class Ui_MainWindow(object):
         self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
         self.gridLayout_5 = QGridLayout()
         self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.label_c_smd_min = QLabel(self.tab_2)
+        self.label_c_smd_min.setObjectName(u"label_c_smd_min")
+
+        self.gridLayout_5.addWidget(self.label_c_smd_min, 2, 1, 1, 1)
+
+        self.le_c_smd_min = QLineEdit(self.tab_2)
+        self.le_c_smd_min.setObjectName(u"le_c_smd_min")
+        self.le_c_smd_min.setStyleSheet(u"background-color: rgb(234, 234, 234);")
+
+        self.gridLayout_5.addWidget(self.le_c_smd_min, 2, 2, 1, 1)
+
         self.csmd_le_cap = QLineEdit(self.tab_2)
         self.csmd_le_cap.setObjectName(u"csmd_le_cap")
         self.csmd_le_cap.setStyleSheet(u"background-color: rgb(234, 234, 234);")
 
         self.gridLayout_5.addWidget(self.csmd_le_cap, 0, 2, 1, 1)
 
+        self.cmb_csmb_cap = QComboBox(self.tab_2)
+        self.cmb_csmb_cap.addItem("")
+        self.cmb_csmb_cap.addItem("")
+        self.cmb_csmb_cap.addItem("")
+        self.cmb_csmb_cap.addItem("")
+        self.cmb_csmb_cap.setObjectName(u"cmb_csmb_cap")
+        self.cmb_csmb_cap.setCurrentText(u"pF")
+        self.cmb_csmb_cap.setPlaceholderText(u"")
+
+        self.gridLayout_5.addWidget(self.cmb_csmb_cap, 0, 3, 1, 1)
+
+        self.le_c_smd_max = QLineEdit(self.tab_2)
+        self.le_c_smd_max.setObjectName(u"le_c_smd_max")
+        self.le_c_smd_max.setStyleSheet(u"background-color: rgb(234, 234, 234);")
+
+        self.gridLayout_5.addWidget(self.le_c_smd_max, 3, 2, 1, 1)
+
         self.label_42 = QLabel(self.tab_2)
         self.label_42.setObjectName(u"label_42")
 
-        self.gridLayout_5.addWidget(self.label_42, 1, 0, 1, 1)
-
-        self.lineEdit_c_smd_maxval = QLineEdit(self.tab_2)
-        self.lineEdit_c_smd_maxval.setObjectName(u"lineEdit_c_smd_maxval")
-        self.lineEdit_c_smd_maxval.setStyleSheet(u"background-color: rgb(234, 234, 234);")
-
-        self.gridLayout_5.addWidget(self.lineEdit_c_smd_maxval, 2, 2, 1, 1)
-
-        self.lineEdit_c_smd_minval = QLineEdit(self.tab_2)
-        self.lineEdit_c_smd_minval.setObjectName(u"lineEdit_c_smd_minval")
-        self.lineEdit_c_smd_minval.setStyleSheet(u"background-color: rgb(234, 234, 234);")
-
-        self.gridLayout_5.addWidget(self.lineEdit_c_smd_minval, 1, 2, 1, 1)
-
-        self.cmb_csmb_cap = QComboBox(self.tab_2)
-        self.cmb_csmb_cap.setObjectName(u"cmb_csmb_cap")
-
-        self.gridLayout_5.addWidget(self.cmb_csmb_cap, 0, 3, 1, 1)
+        self.gridLayout_5.addWidget(self.label_42, 2, 0, 1, 1)
 
         self.label_43 = QLabel(self.tab_2)
         self.label_43.setObjectName(u"label_43")
 
-        self.gridLayout_5.addWidget(self.label_43, 2, 0, 1, 1)
+        self.gridLayout_5.addWidget(self.label_43, 3, 0, 1, 1)
 
         self.label_41 = QLabel(self.tab_2)
         self.label_41.setObjectName(u"label_41")
 
         self.gridLayout_5.addWidget(self.label_41, 0, 0, 1, 1)
 
-        self.label_c_smd_min = QLabel(self.tab_2)
-        self.label_c_smd_min.setObjectName(u"label_c_smd_min")
-
-        self.gridLayout_5.addWidget(self.label_c_smd_min, 1, 1, 1, 1)
-
         self.label_c_smd_max = QLabel(self.tab_2)
         self.label_c_smd_max.setObjectName(u"label_c_smd_max")
 
-        self.gridLayout_5.addWidget(self.label_c_smd_max, 2, 1, 1, 1)
+        self.gridLayout_5.addWidget(self.label_c_smd_max, 3, 1, 1, 1)
+
+        self.label_6 = QLabel(self.tab_2)
+        self.label_6.setObjectName(u"label_6")
+
+        self.gridLayout_5.addWidget(self.label_6, 1, 0, 1, 1)
+
+        self.le_c_smd_tolerance = QLineEdit(self.tab_2)
+        self.le_c_smd_tolerance.setObjectName(u"le_c_smd_tolerance")
+        self.le_c_smd_tolerance.setMouseTracking(False)
+        self.le_c_smd_tolerance.setAcceptDrops(False)
+        self.le_c_smd_tolerance.setStyleSheet(u"background-color: rgb(234, 234, 234);")
+        self.le_c_smd_tolerance.setInputMask(u"")
+        self.le_c_smd_tolerance.setReadOnly(True)
+
+        self.gridLayout_5.addWidget(self.le_c_smd_tolerance, 1, 2, 1, 1)
+
+        self.label_c_tolerance = QLabel(self.tab_2)
+        self.label_c_tolerance.setObjectName(u"label_c_tolerance")
+        self.label_c_tolerance.setStyleSheet(u"font: 700 11pt \"Noto Sans\";")
+        self.label_c_tolerance.setFrameShape(QFrame.Shape.Box)
+        self.label_c_tolerance.setFrameShadow(QFrame.Shadow.Raised)
+        self.label_c_tolerance.setText(u"")
+        self.label_c_tolerance.setTextFormat(Qt.TextFormat.RichText)
+
+        self.gridLayout_5.addWidget(self.label_c_tolerance, 1, 3, 1, 1)
 
 
         self.horizontalLayout_9.addLayout(self.gridLayout_5)
@@ -891,10 +1009,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.checkBox_ohm_edit_4b.toggled.connect(self.pB_E96_Min.setEnabled)
         self.cb_csmd_198.toggled.connect(self.csmd_digit2.setDisabled)
-        self.cb_csmd_198.toggled.connect(self.cmb_csmb198_2.setEnabled)
         self.cb_csmd_198.toggled.connect(self.csmd_digit3.setDisabled)
-        self.cb_csmd_198.toggled.connect(self.rB_csmd.toggle)
-        self.cb_csmd_198.toggled.connect(self.csmd_digit1.setDisabled)
         self.checkBox_ohm_edit_4b.toggled.connect(self.label_e48.setEnabled)
         self.cb_csmd_198.toggled.connect(self.rB_csmd.setDisabled)
         self.checkBox_ohm_edit_4b.toggled.connect(self.lineEdit_ohm_4b.setEnabled)
@@ -905,9 +1020,13 @@ class Ui_MainWindow(object):
         self.checkBox_ohm_edit_4b.toggled.connect(self.label_e96.setEnabled)
         self.checkBox_ohm_edit_4b.toggled.connect(self.pB_E24_Min.setEnabled)
         self.checkBox_ohm_edit_4b.toggled.connect(self.label_e24.setEnabled)
+        self.cb_csmd_198.toggled.connect(self.cmb_csmb198_2.setEnabled)
+        self.cb_csmd_198.toggled.connect(self.csmd_digit1.setDisabled)
 
         self.tabWidget.setCurrentIndex(0)
-        self.cmb_csmb198_1.setCurrentIndex(-1)
+        self.csmd_digit2.setCurrentIndex(0)
+        self.cmb_csmb198_1.setCurrentIndex(0)
+        self.cmb_csmb_cap.setCurrentIndex(3)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -960,26 +1079,123 @@ class Ui_MainWindow(object):
         self.label_44.setText(QCoreApplication.translate("MainWindow", u"3 Digits", None))
         self.rB_csmd.setText("")
         self.label_45.setText(QCoreApplication.translate("MainWindow", u"4 Digits", None))
+        self.csmd_digit1.setItemText(0, "")
+        self.csmd_digit1.setItemText(1, QCoreApplication.translate("MainWindow", u"1", None))
+        self.csmd_digit1.setItemText(2, QCoreApplication.translate("MainWindow", u"2", None))
+        self.csmd_digit1.setItemText(3, QCoreApplication.translate("MainWindow", u"3", None))
+        self.csmd_digit1.setItemText(4, QCoreApplication.translate("MainWindow", u"4", None))
+        self.csmd_digit1.setItemText(5, QCoreApplication.translate("MainWindow", u"5", None))
+        self.csmd_digit1.setItemText(6, QCoreApplication.translate("MainWindow", u"6", None))
+        self.csmd_digit1.setItemText(7, QCoreApplication.translate("MainWindow", u"7", None))
+        self.csmd_digit1.setItemText(8, QCoreApplication.translate("MainWindow", u"8", None))
+
+        self.csmd_digit2.setItemText(0, "")
+        self.csmd_digit2.setItemText(1, QCoreApplication.translate("MainWindow", u"0", None))
+        self.csmd_digit2.setItemText(2, QCoreApplication.translate("MainWindow", u"1", None))
+        self.csmd_digit2.setItemText(3, QCoreApplication.translate("MainWindow", u"2", None))
+        self.csmd_digit2.setItemText(4, QCoreApplication.translate("MainWindow", u"3", None))
+        self.csmd_digit2.setItemText(5, QCoreApplication.translate("MainWindow", u"4", None))
+        self.csmd_digit2.setItemText(6, QCoreApplication.translate("MainWindow", u"5", None))
+        self.csmd_digit2.setItemText(7, QCoreApplication.translate("MainWindow", u"6", None))
+        self.csmd_digit2.setItemText(8, QCoreApplication.translate("MainWindow", u"7", None))
+        self.csmd_digit2.setItemText(9, QCoreApplication.translate("MainWindow", u"8", None))
+        self.csmd_digit2.setItemText(10, QCoreApplication.translate("MainWindow", u"R", None))
+
+        self.csmd_digit2.setCurrentText("")
+        self.csmd_digit2.setPlaceholderText("")
+        self.csmd_digit3.setItemText(0, "")
+        self.csmd_digit3.setItemText(1, QCoreApplication.translate("MainWindow", u"0", None))
+        self.csmd_digit3.setItemText(2, QCoreApplication.translate("MainWindow", u"1", None))
+        self.csmd_digit3.setItemText(3, QCoreApplication.translate("MainWindow", u"2", None))
+        self.csmd_digit3.setItemText(4, QCoreApplication.translate("MainWindow", u"3", None))
+        self.csmd_digit3.setItemText(5, QCoreApplication.translate("MainWindow", u"4", None))
+        self.csmd_digit3.setItemText(6, QCoreApplication.translate("MainWindow", u"5", None))
+        self.csmd_digit3.setItemText(7, QCoreApplication.translate("MainWindow", u"6", None))
+        self.csmd_digit3.setItemText(8, QCoreApplication.translate("MainWindow", u"7", None))
+        self.csmd_digit3.setItemText(9, QCoreApplication.translate("MainWindow", u"8", None))
+        self.csmd_digit3.setItemText(10, QCoreApplication.translate("MainWindow", u"9", None))
+
+        self.csmd_digit4.setItemText(0, "")
+        self.csmd_digit4.setItemText(1, QCoreApplication.translate("MainWindow", u"B", None))
+        self.csmd_digit4.setItemText(2, QCoreApplication.translate("MainWindow", u"C", None))
+        self.csmd_digit4.setItemText(3, QCoreApplication.translate("MainWindow", u"D", None))
+        self.csmd_digit4.setItemText(4, QCoreApplication.translate("MainWindow", u"E", None))
+        self.csmd_digit4.setItemText(5, QCoreApplication.translate("MainWindow", u"F", None))
+        self.csmd_digit4.setItemText(6, QCoreApplication.translate("MainWindow", u"G", None))
+        self.csmd_digit4.setItemText(7, QCoreApplication.translate("MainWindow", u"J", None))
+        self.csmd_digit4.setItemText(8, QCoreApplication.translate("MainWindow", u"K", None))
+        self.csmd_digit4.setItemText(9, QCoreApplication.translate("MainWindow", u"M", None))
+        self.csmd_digit4.setItemText(10, QCoreApplication.translate("MainWindow", u"Z", None))
+
         self.cb_csmd_198.setText("")
         self.label_46.setText(QCoreApplication.translate("MainWindow", u"EIA-198", None))
+        self.cmb_csmb198_1.setItemText(1, QCoreApplication.translate("MainWindow", u"A", None))
+        self.cmb_csmb198_1.setItemText(2, QCoreApplication.translate("MainWindow", u"B", None))
+        self.cmb_csmb198_1.setItemText(3, QCoreApplication.translate("MainWindow", u"C", None))
+        self.cmb_csmb198_1.setItemText(4, QCoreApplication.translate("MainWindow", u"D", None))
+        self.cmb_csmb198_1.setItemText(5, QCoreApplication.translate("MainWindow", u"E", None))
+        self.cmb_csmb198_1.setItemText(6, QCoreApplication.translate("MainWindow", u"F", None))
+        self.cmb_csmb198_1.setItemText(7, QCoreApplication.translate("MainWindow", u"G", None))
+        self.cmb_csmb198_1.setItemText(8, QCoreApplication.translate("MainWindow", u"H", None))
+        self.cmb_csmb198_1.setItemText(9, QCoreApplication.translate("MainWindow", u"J", None))
+        self.cmb_csmb198_1.setItemText(10, QCoreApplication.translate("MainWindow", u"a", None))
+        self.cmb_csmb198_1.setItemText(11, QCoreApplication.translate("MainWindow", u"L", None))
+        self.cmb_csmb198_1.setItemText(12, QCoreApplication.translate("MainWindow", u"M", None))
+        self.cmb_csmb198_1.setItemText(13, QCoreApplication.translate("MainWindow", u"N", None))
+        self.cmb_csmb198_1.setItemText(14, QCoreApplication.translate("MainWindow", u"b", None))
+        self.cmb_csmb198_1.setItemText(15, QCoreApplication.translate("MainWindow", u"P", None))
+        self.cmb_csmb198_1.setItemText(16, QCoreApplication.translate("MainWindow", u"Q", None))
+        self.cmb_csmb198_1.setItemText(17, QCoreApplication.translate("MainWindow", u"d", None))
+        self.cmb_csmb198_1.setItemText(18, QCoreApplication.translate("MainWindow", u"R", None))
+        self.cmb_csmb198_1.setItemText(19, QCoreApplication.translate("MainWindow", u"e", None))
+        self.cmb_csmb198_1.setItemText(20, QCoreApplication.translate("MainWindow", u"S", None))
+        self.cmb_csmb198_1.setItemText(21, QCoreApplication.translate("MainWindow", u"f", None))
+        self.cmb_csmb198_1.setItemText(22, QCoreApplication.translate("MainWindow", u"T", None))
+        self.cmb_csmb198_1.setItemText(23, QCoreApplication.translate("MainWindow", u"U", None))
+        self.cmb_csmb198_1.setItemText(24, QCoreApplication.translate("MainWindow", u"m", None))
+        self.cmb_csmb198_1.setItemText(25, QCoreApplication.translate("MainWindow", u"V", None))
+        self.cmb_csmb198_1.setItemText(26, QCoreApplication.translate("MainWindow", u"W", None))
+        self.cmb_csmb198_1.setItemText(27, QCoreApplication.translate("MainWindow", u"n", None))
+        self.cmb_csmb198_1.setItemText(28, QCoreApplication.translate("MainWindow", u"X", None))
+        self.cmb_csmb198_1.setItemText(29, QCoreApplication.translate("MainWindow", u"t", None))
+        self.cmb_csmb198_1.setItemText(30, QCoreApplication.translate("MainWindow", u"Y", None))
+        self.cmb_csmb198_1.setItemText(31, QCoreApplication.translate("MainWindow", u"y", None))
+        self.cmb_csmb198_1.setItemText(32, QCoreApplication.translate("MainWindow", u"Z", None))
+
+        self.cmb_csmb198_2.setItemText(0, "")
+        self.cmb_csmb198_2.setItemText(1, QCoreApplication.translate("MainWindow", u"0", None))
+        self.cmb_csmb198_2.setItemText(2, QCoreApplication.translate("MainWindow", u"1", None))
+        self.cmb_csmb198_2.setItemText(3, QCoreApplication.translate("MainWindow", u"2", None))
+        self.cmb_csmb198_2.setItemText(4, QCoreApplication.translate("MainWindow", u"3", None))
+        self.cmb_csmb198_2.setItemText(5, QCoreApplication.translate("MainWindow", u"4", None))
+        self.cmb_csmb198_2.setItemText(6, QCoreApplication.translate("MainWindow", u"5", None))
+        self.cmb_csmb198_2.setItemText(7, QCoreApplication.translate("MainWindow", u"6", None))
+        self.cmb_csmb198_2.setItemText(8, QCoreApplication.translate("MainWindow", u"7", None))
+        self.cmb_csmb198_2.setItemText(9, QCoreApplication.translate("MainWindow", u"8", None))
+        self.cmb_csmb198_2.setItemText(10, QCoreApplication.translate("MainWindow", u"9", None))
+
         self.csmd_le1.setText("")
-        self.csmd_le1.setPlaceholderText(QCoreApplication.translate("MainWindow", u"1", None))
+        self.csmd_le1.setPlaceholderText("")
+        self.label_c_smd_min.setText("")
+        self.cmb_csmb_cap.setItemText(0, QCoreApplication.translate("MainWindow", u"mF", None))
+        self.cmb_csmb_cap.setItemText(1, QCoreApplication.translate("MainWindow", u"\u00b5F", None))
+        self.cmb_csmb_cap.setItemText(2, QCoreApplication.translate("MainWindow", u"nF", None))
+        self.cmb_csmb_cap.setItemText(3, QCoreApplication.translate("MainWindow", u"pF", None))
+
         self.label_42.setText(QCoreApplication.translate("MainWindow", u"Minimum", None))
-        self.cmb_csmb_cap.setCurrentText("")
-        self.cmb_csmb_cap.setPlaceholderText("")
         self.label_43.setText(QCoreApplication.translate("MainWindow", u"Maximum", None))
         self.label_41.setText(QCoreApplication.translate("MainWindow", u"Capacity", None))
-        self.label_c_smd_min.setText("")
         self.label_c_smd_max.setText("")
+        self.label_6.setText(QCoreApplication.translate("MainWindow", u"Tolerance", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"C SMD", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"E-Series", None))
         self.label_32.setText("")
         self.label_16.setText(QCoreApplication.translate("MainWindow", u"ResistorEnDecode", None))
-        self.label_24.setText(QCoreApplication.translate("MainWindow", u"Version 2.0 2026", None))
+        self.label_24.setText(QCoreApplication.translate("MainWindow", u"Version 2.1 2026", None))
         self.label_15.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>This is a standalone tool to decode the color bands on through-hole resistors and number codes on SMD parts. It supports 3, 4, 5, and 6 band resistors, as well as standard SMD codes, including the EIA-96 standard.</p></body></html>", None))
         self.label_29.setText(QCoreApplication.translate("MainWindow", u"Libraries: ", None))
         self.label_30.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Qt 6.1.2 using PySide6</p></body></html>", None))
-        self.label_31.setText(QCoreApplication.translate("MainWindow", u"Python >=3.9.5", None))
+        self.label_31.setText(QCoreApplication.translate("MainWindow", u"Python >=3.13", None))
         self.label_38.setText("")
         self.label_34.setText(QCoreApplication.translate("MainWindow", u"Author:", None))
         self.label_39.setText(QCoreApplication.translate("MainWindow", u"Alfredo Cubitos", None))

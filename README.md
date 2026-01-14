@@ -39,6 +39,12 @@ python -m resistorendecode
 1. Tolerance values are only standardized for EIA-96 codes and codes with short underlines. Check the manufacturer's datasheet if the tolerance is critical for your application.
 
 ## Changes
+### new in this version
+---14.01.2026---
+- SMD-Capacities 3 and 4 digits (not EIA)
+
+---12.01.2026---
+
 **Mainly refactored**
 
 
