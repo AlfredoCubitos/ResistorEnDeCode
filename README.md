@@ -40,6 +40,9 @@ python -m resistorendecode
 
 ## Changes
 ### new in this version
+---15.01.2026---
+- SMD EIA-198 implemented
+
 ---14.01.2026---
 - SMD-Capacities 3 and 4 digits (not EIA)
 

@@ -171,7 +171,8 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         self.band_type = "4b"
         self.svg_widgets = {}
         self.capdigits = 3
-
+        self.capeia = False
+        self.EIA = dict(zip(gh.ESeries["EIA198"],gh.ESeries["EIA198v"]))
         
         # Load JSON data first
         self.load_json_data()
@@ -187,7 +188,6 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         self.setup_validators()
         self.setup_connections()
         self.setup_initial_values()
-
         
         self.setup_table_data(self.tableWidget,gh.ESeries)
 
@@ -345,12 +345,13 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
         # Capacity 4 Digits
         self.rB_csmd.checkStateChanged.connect(self.capacity_digits)
         # Capacity
-        self.csmd_digit1.currentIndexChanged.connect(self.capacity_setValue)
-        self.csmd_digit2.currentIndexChanged.connect(self.capacity_setValue)
-        self.csmd_digit3.currentIndexChanged.connect(self.capacity_setValue)
-        self.csmd_digit4.currentIndexChanged.connect(self.capacity_setValue)
-        self.cmb_csmb_cap.currentIndexChanged.connect(self.capacity_setValue)
-
+        self.csmd_digit1.currentIndexChanged.connect(self.capacity_setter)
+        self.csmd_digit2.currentIndexChanged.connect(self.capacity_setter)
+        self.csmd_digit3.currentIndexChanged.connect(self.capacity_setter)
+        self.csmd_digit4.currentIndexChanged.connect(self.capacity_setter)
+        self.cmb_csmb_cap.currentIndexChanged.connect(self.capacity_setter)
+        self.cmb_csmb198_1.currentIndexChanged.connect(self.capacity_setter)
+        self.cmb_csmb198_2.currentIndexChanged.connect(self.capacity_setter)
 
     @Slot(QPushButton)
     def eButton(self,button):
@@ -405,7 +406,10 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
     @Slot(int)
     def capacity_eia(self,value):
         if value == Qt.CheckState.Checked:
+            self.capeia = True
             self.rB_csmd.setCheckState(Qt.CheckState.Unchecked)
+        else:
+            self.capeia = False
 
     @Slot(int)
     def capacity_digits(self, value):
@@ -415,6 +419,12 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
             self.capdigits = 3
 
     @Slot()
+    def capacity_setter(self):
+        if self.capeia:
+            self.capacity_setEiaValue()
+        else:
+            self.capacity_setValue()
+
     def capacity_setValue(self):
 
         v = self.csmd_digit1.currentText()
@@ -434,6 +444,30 @@ class ResistanceCalc(Qw.QMainWindow, Ui_MainWindow):
             self.label_c_tolerance.setText(l[1])
 
 
+    def capacity_setEiaValue(self):
+
+        v = self.cmb_csmb198_1.currentText() + self.cmb_csmb198_2.currentText()
+        self.csmd_le1.setText(v)
+        if len(v) == 2:
+            self.capacity_EiaCalc(v)
+
+
+    def capacity_EiaCalc(self,value: str)->None:
+        v1 = self.EIA[value[0]]
+        v2 = "1" if value[1] == "0" else  "1"+"".zfill(int(value[1]))
+
+        v = (int(v1) * int(v2)) / int(gh.CAPACITY[self.cmb_csmb_cap.currentText()])
+
+        print("Cap: ",v1," ",v2," ",v, " ",len(str(v)))
+
+        if "e-" in str(v):
+
+            #self.csmd_le_cap.setText(f'{v:f} or {v}')
+            #print("Exp: ",str(v)[len(str(v))-1])
+            e = str(v)[len(str(v))-1]
+            self.csmd_le_cap.setText(f'{v:.{e}f} or {v}')
+        else:
+            self.csmd_le_cap.setText(str(v))
 
     def capacity_calc(self,value: str)->None:
 

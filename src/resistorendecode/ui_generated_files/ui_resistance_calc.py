@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'ui_resistance_calcZAtnyj.ui'
+## Form generated from reading UI file 'ui_resistance_calcpUjYXJ.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.1
 ##
@@ -1191,7 +1191,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"E-Series", None))
         self.label_32.setText("")
         self.label_16.setText(QCoreApplication.translate("MainWindow", u"ResistorEnDecode", None))
-        self.label_24.setText(QCoreApplication.translate("MainWindow", u"Version 2.1 2026", None))
+        self.label_24.setText(QCoreApplication.translate("MainWindow", u"Version 2.2 2026", None))
         self.label_15.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>This is a standalone tool to decode the color bands on through-hole resistors and number codes on SMD parts. It supports 3, 4, 5, and 6 band resistors, as well as standard SMD codes, including the EIA-96 standard.</p></body></html>", None))
         self.label_29.setText(QCoreApplication.translate("MainWindow", u"Libraries: ", None))
         self.label_30.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Qt 6.1.2 using PySide6</p></body></html>", None))
